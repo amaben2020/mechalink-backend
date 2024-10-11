@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+require('dotenv').config();
 
 app.get('/', (req, res) => {
   res.json({
@@ -9,5 +10,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(8080, () => {
-  console.log('server is running fine...');
+  console.log(
+    `server is running fine... ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`
+  );
 });

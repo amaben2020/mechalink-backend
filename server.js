@@ -9,7 +9,7 @@ app.get('/api/home', (req, res) => {
   });
 });
 
-app.listen(`${process.env.PORT} || 5000`, () => {
+app.listen(process.env.PORT || 5000, () => {
   console.log(
     `server is running fine ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`
   );

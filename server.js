@@ -8,7 +8,7 @@ const {
   DeleteMessageCommand,
 } = require('@aws-sdk/client-sqs');
 const { configObject } = '/credentials.js';
-
+const { Consumer } = require('sqs-consumer');
 // move to SQS factory
 const sqsClient = new SQSClient({
   region: 'us-east-1',
@@ -84,7 +84,7 @@ const pollMessages = async () => {
   }
 };
 
-pollMessages();
+// pollMessages();
 
 app.get('/api/home', (req, res) => {
   res.json({
@@ -106,3 +106,18 @@ app.listen(8000, () => {
     `server is running fine ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`
   );
 });
+
+// auto deletes messages not like the manual example
+const sqsConsumerApp = Consumer.create({
+  queueUrl,
+  sqs: sqsClient,
+  handleMessage: async (message) => {
+    console.log('MESSAGE FROM QUEUE', message);
+  },
+});
+
+sqsConsumerApp.on('processing_error', (err) => {
+  console.log(err);
+});
+
+sqsConsumerApp.start();

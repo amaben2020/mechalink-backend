@@ -9,16 +9,10 @@ const {
 } = require('@aws-sdk/client-sqs');
 const { configObject } = '/credentials.js';
 const { Consumer } = require('sqs-consumer');
+const JobNotificationQueueConsumer = require('./services/sqs/consumer');
 // move to SQS factory
 const sqsClient = new SQSClient({
   region: 'us-east-1',
-  // useQueueUrlAsEndpoint: false,
-  // endpoint: 'https://sqs.us-east-1.amazonaws.com',
-
-  // credentials: {
-  //   accessKeyId: process.env.AWS_ACCESS_KEY,
-  //   secretAccessKey: process.env.SECRET_KEY,
-  // },
 });
 
 const queueUrl =
@@ -63,29 +57,6 @@ const sendMessageToQueue = async (body) => {
 //   })
 // );
 
-// consumes the
-const pollMessages = async () => {
-  try {
-    const command = new ReceiveMessageCommand({
-      MaxNumberOfMessages: 10,
-      QueueUrl: process.env.AWS_QUEUE_URL,
-      WaitTimeSeconds: 5,
-      MessageAttributes: ['All'],
-    });
-    const result = await sqsClient.send(command);
-    console.log(result.Messages[0]);
-    // after sending to firebase, delete the message
-
-    await deleteMessageFromQueue(result.Messages[0].ReceiptHandle);
-
-    console.log('Message deleted', result.Messages[0].Body);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-// pollMessages();
-
 app.get('/api/home', (req, res) => {
   res.json({
     status: 200,
@@ -107,17 +78,6 @@ app.listen(8000, () => {
   );
 });
 
-// auto deletes messages not like the manual example
-const sqsConsumerApp = Consumer.create({
-  queueUrl,
-  sqs: sqsClient,
-  handleMessage: async (message) => {
-    console.log('MESSAGE FROM QUEUE', message);
-  },
-});
+const jobNotifConsumer = new JobNotificationQueueConsumer();
 
-sqsConsumerApp.on('processing_error', (err) => {
-  console.log(err);
-});
-
-sqsConsumerApp.start();
+jobNotifConsumer.startJobNotificationQueue();

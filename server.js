@@ -6,8 +6,7 @@ const { configObject } = '/credentials.js';
 
 // move to SQS factory
 const sqsClient = new SQSClient(configObject);
-const queueUrl =
-  'https://sqs.us-east-1.amazonaws.com/430118838661/JobNotificationQueue';
+const queueUrl = process.env.AWS_QUEUE_URL;
 
 // message to be sent
 const sendMessageToQueue = async (body) => {

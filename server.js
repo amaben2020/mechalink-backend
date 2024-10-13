@@ -1,6 +1,28 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
+const { SQSClient, SendMessageCommand } = require('@aws-sdk/client-sqs');
+const { configObject } = '/credentials.js';
+
+// move to SQS factory
+const sqsClient = new SQSClient(configObject);
+const queueUrl =
+  'https://sqs.us-east-1.amazonaws.com/430118838661/JobNotificationQueue';
+
+// message to be sent
+const sendMessageToQueue = async (body) => {
+  try {
+    const command = new SendMessageCommand({
+      MessageBody: body,
+      QueueUrl: queueUrl,
+      MessageAttributes: {
+        OrderId: { DataType: 'String', StringValue: '4421x' },
+      },
+    });
+    const result = await sqsClient.send(command);
+    console.log(result);
+  } catch (error) {}
+};
 
 app.get('/api/home', (req, res) => {
   res.json({
@@ -16,7 +38,8 @@ app.get('/api/away', (req, res) => {
   });
 });
 
-app.listen(process.env.PORT || 5000, () => {
+//process.env.PORT || 5000
+app.listen(8000, () => {
   console.log(
     `server is running fine ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`
   );

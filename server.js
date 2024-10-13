@@ -23,6 +23,11 @@ const sendMessageToQueue = async (body) => {
   } catch (error) {}
 };
 
+sendMessageToQueue({
+  title: 'Job created',
+  description: 'Job should be consumed by firebase',
+});
+
 app.get('/api/home', (req, res) => {
   res.json({
     status: 200,

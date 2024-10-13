@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 const configObject = {
   region: 'us-east-1',
   credentials: {
-    accessKeyId: 'AKIAWIJIUUGCY3NFQJOY',
-    secretAccessKey: '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',
+    accessKeyId: process.env.AWS_ACCESS_KEY,
+    secretAccessKey: process.env.SECRET_KEY,
   },
 };
 

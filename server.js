@@ -27,7 +27,7 @@ app.listen(8000, () => {
   );
 });
 
-// use the producer in viable service
+// use the producer in viable service.
 // const sendJobNotification = new JobNofificationQueue();
 // sendJobNotification.sendMessageToQueue(
 //   JSON.stringify({

@@ -1,11 +1,13 @@
-const { sqsClient } = require('../index');
 const { Consumer } = require('sqs-consumer');
+const sqsClient = require('..');
+
+// TODO: abstract this to receive queue url and sql client as argument
 
 class JobNotificationQueueConsumer {
-  // Define a method to create the job notification consumer
   jobNotificationConsumer() {
     return Consumer.create({
-      queueUrl: process.env.AWS_QUEUE_URL,
+      queueUrl:
+        'https://sqs.us-east-1.amazonaws.com/430118838661/JobNotificationQueue',
       sqs: sqsClient,
       handleMessage: async (message) => {
         console.log('MESSAGE FROM QUEUE:', message);
@@ -23,7 +25,6 @@ class JobNotificationQueueConsumer {
       console.log('Processing error:', err);
     });
 
-    // Handle any other consumer errors (e.g., SQS errors)
     consumer.on('error', (err) => {
       console.log('Consumer error:', err);
     });

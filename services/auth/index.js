@@ -31,6 +31,8 @@ export const signupUser = (username, password, email) => {
     }
     const cognitoUser = result.user;
     console.log('User name is', cognitoUser.getUsername());
+
+    return cognitoUser.getUsername();
   });
 };
 

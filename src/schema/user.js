@@ -1,11 +1,15 @@
-// export { usersTable } from './schema/user.js';
-// export { availability } from './schema/availability.js';
-
-import { pgTable, serial, text, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from 'drizzle-orm/pg-core';
 
 export const roleEnum = pgEnum('role', ['admin', 'client', 'mechanic']);
 
-export const usersTable = pgTable('usersTable', {
+export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
 
   // cos the mechanics are the least literate, they don't have to specify

@@ -1,0 +1,27 @@
+CREATE TYPE "public"."role" AS ENUM('admin', 'client', 'mechanic');--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "usersTable" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"role" "role" DEFAULT 'mechanic',
+	"created_at" timestamp with time zone DEFAULT now(),
+	"created_by" text,
+	"updated_at" timestamp with time zone,
+	"updated_by" text,
+	"deleted_at" timestamp with time zone,
+	"deleted_by" text,
+	"first_name" text,
+	"last_name" text,
+	"email" text,
+	"phone" text,
+	"last_login" timestamp with time zone,
+	"password" text,
+	"address_one" text,
+	"address_two" text,
+	"city" text DEFAULT 'Abuja',
+	"state" text,
+	"zip" text,
+	"country" text DEFAULT 'NG',
+	"cognito_sub" text,
+	CONSTRAINT "usersTable_email_unique" UNIQUE("email"),
+	CONSTRAINT "usersTable_phone_unique" UNIQUE("phone"),
+	CONSTRAINT "usersTable_cognito_sub_unique" UNIQUE("cognito_sub")
+);

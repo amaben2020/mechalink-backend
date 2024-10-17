@@ -63,10 +63,13 @@ app.get('/api/away', (req, res) => {
     message: 'Just added this',
   });
 });
-
+// process.NODE_ENV === 'development' ? 8080 : process.env.PORT || 5000
 //process.env.PORT || 5000
+console.log(process.env.NODE_ENV);
 app.listen(
-  process.NODE_ENV !== 'development' ? 8080 : process.env.PORT || 5000,
+  process.env.NODE_ENV.trim() === 'development'
+    ? 8080
+    : process.env.PORT || 5000,
   () => {
     console.log(
       `server is running fine ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`

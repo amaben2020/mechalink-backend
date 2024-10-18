@@ -4,6 +4,10 @@ import {
   AuthenticationDetails,
   CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
+import { db } from '../../src/db.js';
+
+import { eq } from 'drizzle-orm';
+import { usersTable } from '../../src/schema.js';
 
 // Initialize Cognito User Pool
 const poolData = {
@@ -81,7 +85,7 @@ export const resendConfirmationCode = (username) => {
   });
 };
 // Sign-in Function
-export function signinUser(username, password) {
+export function signinUser(username, password, email) {
   const authenticationDetails = new AuthenticationDetails({
     Username: username,
     Password: password,
@@ -100,6 +104,15 @@ export function signinUser(username, password) {
       console.log('ID Token:', result.getIdToken().getJwtToken());
       console.log('Access Token:', result.getAccessToken().getJwtToken());
       console.log('Refresh Token:', result.getRefreshToken().getToken());
+
+      db.update(usersTable)
+        .set({
+          token: result.getAccessToken().getJwtToken(),
+        })
+        .where(eq(usersTable.email, email))
+
+        .then((res) => console.log(res))
+        .catch((err) => console.error(err));
     },
 
     onFailure: (err) => {

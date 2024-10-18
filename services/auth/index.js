@@ -44,7 +44,7 @@ export function confirmUserSignup(username, code) {
 
   const cognitoUser = new CognitoUser(userData);
   let res = '';
-  // console.log(cognitoUser);
+
   return cognitoUser.confirmRegistration(String(code), true, (err, result) => {
     if (err) {
       console.error(
@@ -53,7 +53,6 @@ export function confirmUserSignup(username, code) {
       );
       res = err.message || JSON.stringify(err);
       return err.message || JSON.stringify(err);
-      // throw Error(err.message || JSON.stringify(err));
     }
 
     console.log('User confirmed successfully:', result);
@@ -70,7 +69,7 @@ export const resendConfirmationCode = (username) => {
 
   const cognitoUser = new CognitoUser(userData);
 
-  cognitoUser.resendConfirmationCode((err, result) => {
+  return cognitoUser.resendConfirmationCode((err, result) => {
     if (err) {
       console.error(
         'Error resending confirmation code:',

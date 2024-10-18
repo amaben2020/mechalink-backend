@@ -64,9 +64,8 @@ export const signup = async (req, res) => {
         email,
         password: hashedPassword,
         firstName: username,
-        addressOne: addressOne || '',
-        role: role || '',
-        firstName,
+        addressOne,
+        role,
         lastName,
         lastLogin,
         city,
@@ -80,19 +79,7 @@ export const signup = async (req, res) => {
     res.json({ user });
   } catch (error) {
     const validationError = fromError(error);
-    console.log(validationError.toString());
-    // or return it as an actual error
-    return validationError;
-    // // Check if the error is a Zod validation error
-    // if (error instanceof ZodError) {
-    //   const errorMessages = error.issues.map((issue) => {
-    //     return `${issue.path[0]}: ${issue.message}`;
-    //   });
-    //   return res.status(400).json({ errors: errorMessages });
-    // }
 
-    // // Handle other errors
-    // console.error('Error during signup:', error);
-    // return res.status(500).send('Something went wrong. Please try again.');
+    res.status(500).send(validationError.toString());
   }
 };

@@ -67,9 +67,10 @@ app.get('/api/away', (req, res) => {
 //process.env.PORT || 5000
 console.log(process.env.NODE_ENV);
 app.listen(
-  process.env.NODE_ENV.trim() === 'development'
-    ? 8080
-    : process.env.PORT || 5000,
+  // process.env.NODE_ENV.trim() === 'development'
+  //   ? 8080
+  //   : process.env.PORT || 5000,
+  process.env.PORT || 5000,
   () => {
     console.log(
       `server is running fine ${process.env.POSTGRES_URL} ===> ${process.env.PORT}`

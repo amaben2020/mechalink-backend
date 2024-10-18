@@ -1,11 +1,11 @@
 {
-  "id": "7b11430c-13a6-468e-bb8d-601ac803d89a",
+  "id": "63a9a4a7-0873-4f66-94df-15281916a51d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.usersTable": {
-      "name": "usersTable",
+    "public.users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
@@ -16,7 +16,7 @@
         },
         "role": {
           "name": "role",
-          "type": "role",
+          "type": "userRole",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
@@ -95,6 +95,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "token": {
+          "name": "token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "address_one": {
           "name": "address_one",
           "type": "text",
@@ -144,22 +150,29 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "usersTable_email_unique": {
-          "name": "usersTable_email_unique",
+        "users_email_unique": {
+          "name": "users_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
           ]
         },
-        "usersTable_phone_unique": {
-          "name": "usersTable_phone_unique",
+        "users_phone_unique": {
+          "name": "users_phone_unique",
           "nullsNotDistinct": false,
           "columns": [
             "phone"
           ]
         },
-        "usersTable_cognito_sub_unique": {
-          "name": "usersTable_cognito_sub_unique",
+        "users_token_unique": {
+          "name": "users_token_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "token"
+          ]
+        },
+        "users_cognito_sub_unique": {
+          "name": "users_cognito_sub_unique",
           "nullsNotDistinct": false,
           "columns": [
             "cognito_sub"
@@ -170,8 +183,8 @@
     }
   },
   "enums": {
-    "public.role": {
-      "name": "role",
+    "public.userRole": {
+      "name": "userRole",
       "schema": "public",
       "values": [
         "admin",

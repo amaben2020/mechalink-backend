@@ -12,6 +12,6 @@ export default defineConfig({
       // process.env.NODE_ENV === 'development'
       //   ? process.env.DATABASE_URL_DEV
       //   : process.env.DATABASE_URL_PROD,
-      'postgres://default:CK3LWXf4iyoY@ep-tight-mode-66645246-pooler.us-east-1.aws.neon.tech:5432/verceldb?sslmode=require',
+      'postgresql://mechalink_owner:gcY6DhXvK0Qx@ep-holy-meadow-a5vnosnq.us-east-2.aws.neon.tech/mechalink?sslmode=require',
   },
 });

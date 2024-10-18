@@ -69,7 +69,7 @@ app.get('/api/away', (req, res) => {
 //process.env.PORT || 5000
 console.log(process.env.NODE_ENV);
 app.listen(
-  process.env.NODE_ENV.trim() === 'development'
+  process.env.NODE_ENV === 'development'
     ? 8080
     : Number(process.env.PORT) || 5000,
   // process.env.PORT || 5000,

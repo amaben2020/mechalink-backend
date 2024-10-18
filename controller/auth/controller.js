@@ -9,11 +9,14 @@ const signupSchema = z.object({
   username: z.string().min(2),
   password: z.string().min(4),
   email: z.string().email(),
+  addressOne: z.string(),
 });
 
 export const signup = async (req, res) => {
   try {
-    const { email, password, username } = signupSchema.parse(req.body);
+    const { email, password, username, addressOne } = signupSchema.parse(
+      req.body
+    );
     const userHasRegistered = await db
       .select()
       .from(usersTable)
@@ -22,7 +25,8 @@ export const signup = async (req, res) => {
 
     // create several errors like tup
     if (userHasRegistered.length > 0) {
-      res.status(401).send('User already exists');
+      res.status(401).send(`User with ${email} already exists`);
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -32,10 +36,10 @@ export const signup = async (req, res) => {
     const user = await db
       .insert(usersTable)
       .values({
-        email: email,
+        email,
         password: hashedPassword,
         firstName: username,
-        addressOne: 'No 6 new world street, Ajao estate',
+        addressOne,
         role: 'client',
       })
       .returning();

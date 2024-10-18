@@ -1,9 +1,15 @@
 {
   "name": "ec2",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
+    "db:push": "npx drizzle-kit push",
+    "db:generate": "drizzle-kit generate --dialect=postgresql --schema=src/schema.js --out=./drizzle",
+    "db:migrate": "node ./src/migrate.js",
+    "db:studio": "npx drizzle-kit studio"
   },
   "author": "",
   "license": "ISC",
@@ -11,8 +17,26 @@
   "description": "",
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.670.0",
+    "@neondatabase/serverless": "^0.10.1",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "bcrypt": "^5.1.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.35.2",
     "express": "^4.21.0",
-    "sqs-consumer": "^11.1.0"
+    "express-json": "^1.0.0",
+    "helmet": "^8.0.0",
+    "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.7",
+    "pg": "^8.13.0",
+    "sqs-consumer": "^11.1.0",
+    "trim-request": "^1.0.6",
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.4.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.26.2"
   }
 }

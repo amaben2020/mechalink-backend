@@ -1,9 +1,8 @@
-const { SendMessageCommand } = require('@aws-sdk/client-sqs');
-const sqsClient = require('..');
-
-require('dotenv').config();
-
-class JobNofificationQueue {
+import dotenv from 'dotenv';
+import { SendMessageCommand } from '@aws-sdk/client-sqs';
+import { sqsClient } from '..';
+dotenv.config();
+export class JobNofificationQueue {
   async sendMessageToQueue(message) {
     try {
       const command = new SendMessageCommand({
@@ -22,5 +21,3 @@ class JobNofificationQueue {
     }
   }
 }
-
-module.exports = JobNofificationQueue;

@@ -1,9 +1,9 @@
-const { Consumer } = require('sqs-consumer');
-const sqsClient = require('..');
+import { Consumer } from 'sqs-consumer';
+import { sqsClient } from '..';
 
 // TODO: abstract this to receive queue url and sql client as argument
 
-class JobNotificationQueueConsumer {
+export class JobNotificationQueueConsumer {
   jobNotificationConsumer() {
     return Consumer.create({
       queueUrl:
@@ -33,5 +33,3 @@ class JobNotificationQueueConsumer {
     consumer.start();
   }
 }
-
-module.exports = JobNotificationQueueConsumer;

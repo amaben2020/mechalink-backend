@@ -1,7 +1,5 @@
-const { SQSClient } = require('@aws-sdk/client-sqs');
+import { SQSClient } from '@aws-sdk/client-sqs';
 
-const sqsClient = new SQSClient({
+export const sqsClient = new SQSClient({
   region: 'us-east-1',
 });
-
-module.exports = sqsClient;

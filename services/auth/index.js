@@ -43,17 +43,22 @@ export function confirmUserSignup(username, code) {
   };
 
   const cognitoUser = new CognitoUser(userData);
-  console.log(cognitoUser);
-  cognitoUser.confirmRegistration(code, true, (err, result) => {
+  let res = '';
+  // console.log(cognitoUser);
+  return cognitoUser.confirmRegistration(String(code), true, (err, result) => {
     if (err) {
       console.error(
         'Error confirming signup:',
         err.message || JSON.stringify(err)
       );
-      return;
+      res = err.message || JSON.stringify(err);
+      return err.message || JSON.stringify(err);
+      // throw Error(err.message || JSON.stringify(err));
     }
 
     console.log('User confirmed successfully:', result);
+    res = result;
+    return result;
   });
 }
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { confirmUserSignup } from '../../services/auth/index.js';
+import { resendConfirmationCode } from '../../services/auth/index.js';
 import { db } from '../../src/db.js';
 import { usersTable } from '../../src/schema.js';
 import { eq } from 'drizzle-orm';
@@ -8,13 +8,13 @@ import { fromError } from 'zod-validation-error';
 
 const confirmSchema = z.object({
   username: z.string().min(2),
-  code: z.number(),
+
   email: z.string().email(),
 });
 
-export const confirmSignup = async (req, res) => {
+export const resendCode = async (req, res) => {
   try {
-    const { code, username, email } = confirmSchema.parse(req.body);
+    const { username, email } = confirmSchema.parse(req.body);
 
     const userHasRegistered = await db
       .select()
@@ -25,7 +25,7 @@ export const confirmSignup = async (req, res) => {
     if (!userHasRegistered.length) {
       throw new MechalinkAlreadyExists(`User with ${username} does not exist`);
     } else {
-      confirmUserSignup(username, code);
+      resendConfirmationCode(username);
 
       res.status(201).json({ message: 'Success' });
     }

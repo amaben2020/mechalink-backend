@@ -32,7 +32,8 @@
     "nodemon": "^3.1.7",
     "sqs-consumer": "^11.1.0",
     "trim-request": "^1.0.6",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
     "drizzle-kit": "^0.26.2"

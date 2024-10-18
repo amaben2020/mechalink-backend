@@ -62,7 +62,7 @@ app.get('/api/away', (req, res) => {
     status: 200,
     message: 'Just added this',
     port: process.env.PORT,
-    isDev: process.env.NODE_ENV.trim() === 'development',
+    isDev: process.env.NODE_ENV === 'development',
   });
 });
 // process.NODE_ENV === 'development' ? 8080 : process.env.PORT || 5000

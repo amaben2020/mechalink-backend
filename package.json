@@ -7,8 +7,8 @@
     "start": "node server.js",
     "dev": "cross-env NODE_ENV=development nodemon ./src/server.js",
     "db:push": "npx drizzle-kit push",
-    "db:generate": "drizzle-kit generate --dialect=postgresql --schema=src/schema.js --out=./drizzle",
-    "db:migrate": "node ./src/migrate.js",
+    "db:generate": "npx drizzle-kit migrate && drizzle-kit generate --dialect=postgresql --schema=src/schema.js --out=./drizzle",
+    "db:migrate": "npx drizzle-kit migrate && node ./src/migrate.js",
     "db:studio": "npx drizzle-kit studio"
   },
   "author": "",

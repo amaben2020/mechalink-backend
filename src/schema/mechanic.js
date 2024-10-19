@@ -12,7 +12,7 @@ import { jobRequests } from './jobRequest.js';
 import { MechanicStatuses } from '../../constants/constants.js';
 import { usersTable } from './user.js';
 
-// export const moodEnum = pgEnum('mobileAppOs', ['ios', 'android']);
+export const mobileOsEnum = pgEnum('mobile_app_os', ['ios', 'android']);
 
 export const mechanics = pgTable('mechanics', {
   id: serial('id').primaryKey(),
@@ -30,7 +30,7 @@ export const mechanics = pgTable('mechanics', {
     length: 256,
   }),
   lastKnownLocationTimestamp: timestamp('last_known_location_timestamp', {}),
-  // mobileAppOs: moodEnum('mobileAppOs'),
+  mobileAppOs: mobileOsEnum('mobile_app_os'),
 });
 
 // one job can have one mechanic but one mechanic can have many jobs

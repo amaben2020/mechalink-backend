@@ -10,7 +10,7 @@ import {
   integer,
 } from 'drizzle-orm/pg-core';
 import { jobs } from './job.js';
-import { mechanics } from './mechanic';
+import { mechanics } from './mechanic.js';
 
 export const jobRequests = pgTable('jobRequests', {
   id: serial('id').primaryKey(),

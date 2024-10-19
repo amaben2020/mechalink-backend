@@ -12,10 +12,10 @@ export const usersTable = pgTable('users', {
 
   // cos the mechanics are the least literate, they don't have to specify
   // role: userRoleEnum().default('mechanic'),
-  status: varchar('user_role', {
+  role: varchar('user_role', {
     enum: Object.values(UserRoles),
     length: 256,
-  }),
+  }).default('mechanic'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   createdBy: text('created_by'),
   updatedAt: timestamp('updated_at', { withTimezone: true }),

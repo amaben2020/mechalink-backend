@@ -1,16 +1,21 @@
-import { pgTable, serial, text, timestamp, pgEnum } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { UserRoles } from '../../constants/constants.js';
 
-export const userRoleEnum = pgEnum('user_role', [
-  'admin',
-  'client',
-  'mechanic',
-]);
+// export const userRoleEnum = pgEnum('user_role', [
+//   'admin',
+//   'client',
+//   'mechanic',
+// ]);
 
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
 
   // cos the mechanics are the least literate, they don't have to specify
-  role: userRoleEnum().default('mechanic'),
+  // role: userRoleEnum().default('mechanic'),
+  status: varchar('user_role', {
+    enum: Object.values(UserRoles),
+    length: 256,
+  }),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   createdBy: text('created_by'),
   updatedAt: timestamp('updated_at', { withTimezone: true }),

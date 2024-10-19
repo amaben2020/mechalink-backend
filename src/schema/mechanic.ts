@@ -5,7 +5,6 @@ import {
   timestamp,
   serial,
   integer,
-  pgEnum,
   text,
 } from 'drizzle-orm/pg-core';
 

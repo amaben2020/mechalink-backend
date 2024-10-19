@@ -8,12 +8,11 @@ import {
   pgEnum,
 } from 'drizzle-orm/pg-core';
 
-import { jobsSchema, usersSchema } from '.';
+import { jobRequests } from './jobRequest.js';
+import { MechanicStatuses } from '../../constants/constants.js';
+import { usersTable } from './user.js';
 
-import { jobRequests } from './jobRequest';
-import { MechanicStatuses } from '../../constants/constants';
-
-export const moodEnum = pgEnum('mobileAppOs', ['ios', 'android']);
+// export const moodEnum = pgEnum('mobileAppOs', ['ios', 'android']);
 
 export const mechanics = pgTable('mechanics', {
   id: serial('id').primaryKey(),
@@ -23,7 +22,7 @@ export const mechanics = pgTable('mechanics', {
     .notNull(),
   updated_by: varchar('updated_by', { length: 256 }),
   updated_at: timestamp('updated_at', { withTimezone: true }),
-  userId: integer('user_id').references(() => usersSchema.id),
+  userId: integer('user_id').references(() => usersTable.id),
   arrivalRate: integer('arrival_rate'),
   jobCount: integer('jobCount'),
   status: varchar('status', {
@@ -31,14 +30,14 @@ export const mechanics = pgTable('mechanics', {
     length: 256,
   }),
   lastKnownLocationTimestamp: timestamp('last_known_location_timestamp', {}),
-  mobileAppOs: moodEnum('mobileAppOs'),
+  // mobileAppOs: moodEnum('mobileAppOs'),
 });
 
 // one job can have one mechanic but one mechanic can have many jobs
 export const mechanicRelations = relations(mechanics, ({ one, many }) => ({
-  user: one(usersSchema, {
+  user: one(usersTable, {
     fields: [mechanics.userId],
-    references: [usersSchema.id],
+    references: [usersTable.id],
   }),
   jobs: many(jobsSchema),
   jobRequests: many(jobRequests),

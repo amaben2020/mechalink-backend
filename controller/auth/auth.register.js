@@ -1,11 +1,13 @@
 import { z, ZodError } from 'zod';
-import { signupUser } from '../../services/auth/index.js';
+
 import { db } from '../../src/db.js';
 import { usersTable } from '../../src/schema.js';
-import bcrypt from 'bcrypt';
+
 import { eq } from 'drizzle-orm';
 import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';
+
+import firebaseAuthController from 'services/auth/firebase.js';
 
 const signupSchema = z.object({
   username: z.string().min(2),
@@ -49,22 +51,17 @@ export const signup = async (req, res) => {
       .where(eq(usersTable.email, email))
       .execute();
 
-    console.log('userHasRegistered', userHasRegistered);
-
     if (userHasRegistered.length > 0) {
       res.status(403).send(`User with ${email} already exists`);
       throw new MechalinkAlreadyExists(`User with ${email} already exists`);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    signupUser(username, password, email);
+    const userData = await firebaseAuthController.register({ email, password });
 
     const user = await db
       .insert(usersTable)
       .values({
         email,
-        password: hashedPassword,
         firstName: username,
         addressOne,
         role,
@@ -75,10 +72,11 @@ export const signup = async (req, res) => {
         addressTwo,
         zip,
         phone,
+        firebaseId: userData.uid,
       })
       .returning();
 
-    res.json({ user });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     const validationError = fromError(error);
     console.log(error);

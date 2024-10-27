@@ -1,5 +1,5 @@
 {
-  "id": "489075fe-6b2e-4a33-a5b5-520f752e0c95",
+  "id": "657384fa-99bf-450f-8e02-13010f5c34f0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -351,7 +351,8 @@
           "name": "user_role",
           "type": "varchar(256)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": "'mechanic'"
         },
         "created_at": {
           "name": "created_at",
@@ -470,8 +471,8 @@
           "notNull": false,
           "default": "'NG'"
         },
-        "cognito_sub": {
-          "name": "cognito_sub",
+        "fid": {
+          "name": "fid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -515,11 +516,11 @@
             "token"
           ]
         },
-        "users_cognito_sub_unique": {
-          "name": "users_cognito_sub_unique",
+        "users_fid_unique": {
+          "name": "users_fid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "cognito_sub"
+            "fid"
           ]
         },
         "users_username_unique": {

@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS "mechanics" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "users" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"user_role" varchar(256),
+	"user_role" varchar(256) DEFAULT 'mechanic',
 	"created_at" timestamp with time zone DEFAULT now(),
 	"created_by" text,
 	"updated_at" timestamp with time zone,
@@ -70,13 +70,13 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"state" text,
 	"zip" text,
 	"country" text DEFAULT 'NG',
-	"cognito_sub" text,
+	"fid" text,
 	"username" text,
 	CONSTRAINT "users_first_name_unique" UNIQUE("first_name"),
 	CONSTRAINT "users_email_unique" UNIQUE("email"),
 	CONSTRAINT "users_phone_unique" UNIQUE("phone"),
 	CONSTRAINT "users_token_unique" UNIQUE("token"),
-	CONSTRAINT "users_cognito_sub_unique" UNIQUE("cognito_sub"),
+	CONSTRAINT "users_fid_unique" UNIQUE("fid"),
 	CONSTRAINT "users_username_unique" UNIQUE("username")
 );
 --> statement-breakpoint

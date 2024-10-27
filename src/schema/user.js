@@ -1,17 +1,8 @@
 import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { UserRoles } from '../../constants/constants.js';
 
-// export const userRoleEnum = pgEnum('user_role', [
-//   'admin',
-//   'client',
-//   'mechanic',
-// ]);
-
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
-
-  // cos the mechanics are the least literate, they don't have to specify
-  // role: userRoleEnum().default('mechanic'),
   role: varchar('user_role', {
     enum: Object.values(UserRoles),
     length: 256,
@@ -35,6 +26,6 @@ export const usersTable = pgTable('users', {
   state: text('state'),
   zip: text('zip'),
   country: text('country').default('NG'),
-  cognitoSub: text('cognito_sub').unique(),
+  firebaseId: text('fid').unique(),
   username: text('username').unique(),
 });

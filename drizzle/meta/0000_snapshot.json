@@ -1,6 +1,6 @@
 {
-  "id": "205b0e20-1341-424c-998c-7a56b22756af",
-  "prevId": "489075fe-6b2e-4a33-a5b5-520f752e0c95",
+  "id": "5c43673b-77f9-401a-96c5-c01f3fea88b8",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -471,8 +471,8 @@
           "notNull": false,
           "default": "'NG'"
         },
-        "cognito_sub": {
-          "name": "cognito_sub",
+        "fid": {
+          "name": "fid",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -516,11 +516,11 @@
             "token"
           ]
         },
-        "users_cognito_sub_unique": {
-          "name": "users_cognito_sub_unique",
+        "users_fid_unique": {
+          "name": "users_fid_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "cognito_sub"
+            "fid"
           ]
         },
         "users_username_unique": {

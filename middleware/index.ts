@@ -10,7 +10,7 @@ export const authenticatedRoute = (
   // check for bearer
   const idToken = req.headers.authorization?.split(' ')[1];
 
-  // also check for user admin
+  // TODO: also check for user admin
 
   firebaseAdmin
     .auth()

@@ -1,4 +1,4 @@
-import { JobRequestStatuses } from './../../constants/constants.js';
+import { JobRequestStatuses } from '../../constants/constants.js';
 import { relations } from 'drizzle-orm';
 import {
   text,
@@ -21,7 +21,7 @@ export const jobRequests = pgTable('jobRequests', {
   updated_by: varchar('updated_by', { length: 256 }),
   updated_at: timestamp('updated_at', { withTimezone: true }),
   status: varchar('status', {
-    enum: Object.values(JobRequestStatuses),
+    enum: Object.values(JobRequestStatuses) as [string, ...string[]],
     length: 256,
   }).default(JobRequestStatuses.NOTIFYING),
   jobId: bigint('job_id', { mode: 'number' })

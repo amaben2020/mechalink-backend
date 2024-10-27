@@ -7,10 +7,8 @@ export const authenticatedRoute = (
   next: express.NextFunction
 ) => {
   console.log('headers', req.headers);
-  // check for bearer
-  const idToken = req.headers.authorization?.split(' ')[1];
 
-  // TODO: also check for user admin
+  const idToken = req.headers.authorization?.split(' ')[1];
 
   firebaseAdmin
     .auth()
@@ -25,3 +23,5 @@ export const authenticatedRoute = (
       res.status(401).json({ error: 'Invalid token' });
     });
 };
+
+// TODO: also create for user admin from db to protect adm

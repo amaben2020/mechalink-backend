@@ -10,7 +10,7 @@ import {
   boolean,
 } from 'drizzle-orm/pg-core';
 import { jobRequests } from './jobRequest.js';
-import { JobStatuses } from './../../constants/constants.js';
+import { JobStatuses } from '../../constants/constants.js';
 import { mechanics } from './mechanic.js';
 
 export const jobs = pgTable('jobs', {
@@ -27,7 +27,7 @@ export const jobs = pgTable('jobs', {
   // we are setting the rate rather than allow things be, i.e rate for service is 15k, we remove 10% and send the rest to the mechanic
   rate: integer('rate'),
   status: varchar('status', {
-    enum: Object.values(JobStatuses),
+    enum: Object.values(JobStatuses) as [string, ...string[]],
     length: 256,
   }).default(JobStatuses.NOTIFYING),
   // TODO: add location mechanics later

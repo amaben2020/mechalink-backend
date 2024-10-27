@@ -4,7 +4,7 @@ import { UserRoles } from '../../constants/constants.js';
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
   role: varchar('user_role', {
-    enum: Object.values(UserRoles),
+    enum: Object.values(UserRoles) as [string, ...string[]],
     length: 256,
   }).default('mechanic'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

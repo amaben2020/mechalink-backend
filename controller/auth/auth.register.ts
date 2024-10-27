@@ -8,6 +8,7 @@ import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';
 
 import firebaseAuthController from 'services/auth/firebase.js';
+import express from 'express';
 
 const signupSchema = z.object({
   username: z.string().min(2),
@@ -18,7 +19,6 @@ const signupSchema = z.object({
   lastName: z.string().optional(),
   phone: z.string(),
   lastLogin: z.string().optional(),
-  addressOne: z.string().optional(),
   addressTwo: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -27,7 +27,7 @@ const signupSchema = z.object({
   role: z.enum(['admin', 'client', 'mechanic']),
 });
 
-export const signup = async (req, res) => {
+export const signup = async (req: express.Request, res: express.Response) => {
   try {
     const {
       email,
@@ -58,11 +58,12 @@ export const signup = async (req, res) => {
 
     const userData = await firebaseAuthController.register({ email, password });
 
-    const user = await db
-      .insert(usersTable)
+    db.insert(usersTable)
+      //@ts-ignore
       .values({
         email,
-        firstName: username,
+        username,
+        firstName,
         addressOne,
         role,
         lastName,
@@ -72,7 +73,7 @@ export const signup = async (req, res) => {
         addressTwo,
         zip,
         phone,
-        firebaseId: userData.uid,
+        firebaseId: userData?.uid,
       })
       .returning();
 

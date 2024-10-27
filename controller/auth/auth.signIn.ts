@@ -1,18 +1,18 @@
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 import { db } from '../../src/db.js';
 import { usersTable } from '../../src/schema.js';
-import bcrypt from 'bcrypt';
 import { eq } from 'drizzle-orm';
 import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';
 import firebaseAuthController from 'services/auth/firebase.js';
+import express from 'express';
 
 const signInSchema = z.object({
   password: z.string().min(4),
   email: z.string().email(),
 });
 
-export const signin = async (req, res) => {
+export const signin = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password } = signInSchema.parse(req.body);
 
@@ -29,15 +29,23 @@ export const signin = async (req, res) => {
 
     const userData = await firebaseAuthController.login({ email, password });
 
-    res.cookie('auth-cookie', (await userData.user.getIdTokenResult()).token, {
-      maxAge: 900000,
-      httpOnly: true,
-    });
-    res.json({ user: await userData.user });
+    res.cookie(
+      'auth-cookie',
+      (await userData?.user.getIdTokenResult())?.token,
+      {
+        maxAge: 900000,
+        httpOnly: true,
+      }
+    );
+
+    if (userData?.user.uid) {
+      res.status(200).json({ user: userData?.user });
+    } else {
+      res.status(401).json({ message: 'Email or password is wrong' });
+    }
   } catch (error) {
     const validationError = fromError(error);
-    console.log(validationError);
+
     res.status(500).send(validationError.toString());
-    console.log(error);
   }
 };

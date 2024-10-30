@@ -1,4 +1,4 @@
-import { JobRequestStatuses } from '../../constants/constants.js';
+import { JobRequestStatuses } from '../../constants/constants.ts';
 import { relations } from 'drizzle-orm';
 import {
   text,
@@ -9,8 +9,8 @@ import {
   bigint,
   integer,
 } from 'drizzle-orm/pg-core';
-import { jobs } from './job.js';
-import { mechanics } from './mechanic.js';
+import { jobs } from './job.ts';
+import { mechanics } from './mechanic.ts';
 
 export const jobRequests = pgTable('jobRequests', {
   id: serial('id').primaryKey(),

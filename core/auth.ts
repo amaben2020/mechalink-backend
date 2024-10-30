@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { db } from 'src/db.js';
-import { usersTable } from 'src/schema.js';
+import { usersTable } from 'src/schema.ts';
 
 export const isUserExist = async (
   email: string

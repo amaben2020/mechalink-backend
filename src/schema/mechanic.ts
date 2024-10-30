@@ -8,11 +8,11 @@ import {
   text,
 } from 'drizzle-orm/pg-core';
 
-import { jobRequests } from './jobRequest.js';
-import { MechanicStatuses } from '../../constants/constants.js';
-import { usersTable } from './user.js';
+import { jobRequests } from './jobRequest.ts';
+import { MechanicStatuses } from '../../constants/constants.ts';
+import { usersTable } from './user.ts';
 import { z } from 'zod';
-import { jobs } from './job.js';
+import { jobs } from './job.ts';
 
 // export const mobileOsEnum = pgEnum('mobile_app_os', ['ios', 'android']);
 function extractValuesAsTuple<T extends Record<string, unknown>>(

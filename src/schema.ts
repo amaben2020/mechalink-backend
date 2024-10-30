@@ -1,5 +1,5 @@
-export { usersTable } from './schema/user.js';
-export { availability } from './schema/availability.js';
-export { jobs as jobSchema } from './schema/job.js';
-export { jobRequests as jobRequestSchema } from './schema/jobRequest.js';
-export { mechanics as mechanicSchema } from './schema/mechanic.js';
+export { usersTable } from './schema/user.ts';
+export { availability } from './schema/availability.ts';
+export { jobs as jobSchema } from './schema/job.ts';
+export { jobRequests as jobRequestSchema } from './schema/jobRequest.ts';
+export { mechanics as mechanicSchema } from './schema/mechanic.ts';

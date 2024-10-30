@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { db } from '../../src/db.js';
-import { usersTable } from '../../src/schema.js';
+import { usersTable } from '../../src/schema.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';

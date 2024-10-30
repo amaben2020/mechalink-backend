@@ -9,9 +9,10 @@ import {
   doublePrecision,
   boolean,
 } from 'drizzle-orm/pg-core';
-import { jobRequests } from './jobRequest.js';
-import { JobStatuses } from '../../constants/constants.js';
-import { mechanics } from './mechanic.js';
+import { jobRequests } from './jobRequest.ts';
+import { JobStatuses } from '../../constants/constants.ts';
+import { mechanics } from './mechanic.ts';
+import { usersTable } from './user.ts';
 
 export const jobs = pgTable('jobs', {
   id: bigserial('id', { mode: 'number' }).primaryKey(),
@@ -36,6 +37,7 @@ export const jobs = pgTable('jobs', {
   locationDetails: text('location_details'),
   isPendingReview: boolean('is_pending_review').default(true),
   mechanicId: integer('mechanic_id').references(() => mechanics.id),
+  userId: integer('user_id').references(() => usersTable.id),
 });
 
 export const jobRelations = relations(jobs, ({ many, one }) => ({
@@ -43,5 +45,9 @@ export const jobRelations = relations(jobs, ({ many, one }) => ({
   mechanic: one(mechanics, {
     fields: [jobs.mechanicId],
     references: [mechanics.id],
+  }),
+  user: one(usersTable, {
+    fields: [jobs.userId],
+    references: [usersTable.id],
   }),
 }));

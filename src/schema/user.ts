@@ -1,10 +1,10 @@
 import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { UserRoles } from '../../constants/constants.js';
+import { UserRoles } from '../../constants/constants.ts';
 
 export const usersTable = pgTable('users', {
   id: serial('id').primaryKey(),
   role: varchar('user_role', {
-    enum: Object.values(UserRoles) as [string, ...string[]],
+    enum: Object.values(UserRoles) as [string, ...[string]],
     length: 256,
   }).default('mechanic'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

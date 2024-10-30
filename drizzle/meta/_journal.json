@@ -8,6 +8,13 @@
       "when": 1730041732831,
       "tag": "0000_lively_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730320851344,
+      "tag": "0001_gray_boomerang",
+      "breakpoints": true
     }
   ]
 }

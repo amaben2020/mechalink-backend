@@ -10,7 +10,7 @@ console.log(
 );
 
 export default defineConfig({
-  schema: './src/schema.js',
+  schema: './src/schema.ts',
   out: './migrations',
   dialect: 'postgresql',
   dbCredentials: {

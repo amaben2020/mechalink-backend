@@ -34,18 +34,17 @@ export const create = async (req: express.Request, res: express.Response) => {
       userId,
     } = jobsSchema.parse(req.body);
 
-    // ensure that only a client can create a job
-    const user = await db
+    // destructuring user from array
+    const [user = undefined] = await db
       .select()
       .from(usersTable)
       .where(eq(usersTable.id, userId));
 
     if (!user) throw new MechalinkError('Not found', 404);
-    if (user[0].role?.includes(UserRoles.mechanic))
+    if (user.role?.includes(UserRoles.mechanic))
       throw new MechalinkError('Unauthorized', 403);
 
-    console.log('role', user[0].role);
-    await createJob({
+    const job = await createJob({
       description,
       rate,
       latitude,
@@ -54,13 +53,12 @@ export const create = async (req: express.Request, res: express.Response) => {
       isPendingReview,
       status,
       userId,
-      createdBy: String(user[0].role) ?? 'admin',
+      createdBy: String(user.role) ?? 'admin',
     });
 
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: `Job id:${job?.id} created successfully` });
   } catch (error) {
     const validationError = fromError(error);
-    console.log(error);
     res.status(500).send(validationError.toString());
   }
 };

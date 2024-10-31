@@ -16,7 +16,7 @@ export const createJob = async ({
   createdBy = 'admin',
 }: z.infer<typeof jobsSchema>) => {
   try {
-    await db
+    const [job = undefined] = await db
       .insert(jobs)
       .values({
         description,
@@ -30,6 +30,18 @@ export const createJob = async ({
         created_by: createdBy,
       })
       .returning();
+
+    return job;
+  } catch (error) {
+    if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
+  }
+};
+
+export const getJobs = async () => {
+  try {
+    const jobsData = await db.select().from(jobs);
+
+    return jobsData;
   } catch (error) {
     if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
   }

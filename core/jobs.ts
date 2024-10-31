@@ -1,4 +1,5 @@
 import { jobsSchema } from 'controller/jobs/job.create.js';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
 import { jobs } from 'src/schema/job.ts';
 import { z } from 'zod';
@@ -17,7 +18,6 @@ export const createJob = async ({
   try {
     await db
       .insert(jobs)
-      //@ts-ignore
       .values({
         description,
         rate,
@@ -31,6 +31,6 @@ export const createJob = async ({
       })
       .returning();
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
   }
 };

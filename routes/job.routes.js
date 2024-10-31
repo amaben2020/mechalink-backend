@@ -9,6 +9,6 @@ const router = express.Router();
 router.route('/jobs').post(trimRequest.all, authenticatedRoute, create);
 
 // very public route
-router.route('/jobs').get(getAll);
+router.route('').get(getAll);
 
 export default router;

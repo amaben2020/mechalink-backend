@@ -8,7 +8,6 @@ export const authenticatedRoute = (
   next: express.NextFunction
 ) => {
   const idToken = req.headers.authorization?.split(' ')[1];
-  console.log(idToken);
   if (!idToken) {
     throw new MechalinkError('Unauthenticated', 403);
   }
@@ -25,5 +24,3 @@ export const authenticatedRoute = (
       res.status(401).json({ error: 'Invalid token' });
     });
 };
-
-// TODO: also create for user admin from db to protect adm

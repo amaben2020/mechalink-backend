@@ -9,8 +9,9 @@ import { fromError } from 'zod-validation-error';
 
 import firebaseAuthController from 'services/auth/firebase.js';
 import express from 'express';
+import { createUser } from 'core/auth.ts';
 
-const signupSchema = z.object({
+export const signupSchema = z.object({
   username: z.string().min(2),
   password: z.string().min(4),
   email: z.string().email(),
@@ -18,7 +19,6 @@ const signupSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string(),
-  lastLogin: z.string().optional(),
   addressTwo: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -36,7 +36,6 @@ export const signup = async (req: express.Request, res: express.Response) => {
       addressOne,
       firstName,
       lastName,
-      lastLogin,
       city,
       country,
       addressTwo,
@@ -56,28 +55,30 @@ export const signup = async (req: express.Request, res: express.Response) => {
       throw new MechalinkAlreadyExists(`User with ${email} already exists`);
     }
 
-    const userData = await firebaseAuthController.register({ email, password });
+    const fbUserData = await firebaseAuthController.register({
+      email,
+      password,
+    });
 
-    db.insert(usersTable)
-      //@ts-ignore
-      .values({
-        email,
-        username,
-        firstName,
-        addressOne,
-        role,
-        lastName,
-        lastLogin,
-        city,
-        country,
-        addressTwo,
-        zip,
-        phone,
-        firebaseId: userData?.uid,
-      })
-      .returning();
+    const user = await createUser({
+      email,
+      username,
+      firstName,
+      addressOne,
+      role,
+      lastName,
+      city,
+      country,
+      addressTwo,
+      zip,
+      phone,
+      firebaseId: fbUserData?.uid ?? '',
+      password,
+    });
 
-    res.status(201).json({ message: 'User created successfully' });
+    res
+      .status(201)
+      .json({ message: `User id:${user?.id} created successfully` });
   } catch (error) {
     const validationError = fromError(error);
     console.log(error);

@@ -18,7 +18,7 @@ export const JobStatuses = {
 
 export const MechanicStatuses = {
   ACCEPTED: 'APPROVED',
-  NOTIFYING: 'UNAPPROVED',
+  UNAPPROVED: 'UNAPPROVED',
   DECLINED: 'OUT_OF_SERVICE',
   BANNED: 'BANNED',
 } as const;

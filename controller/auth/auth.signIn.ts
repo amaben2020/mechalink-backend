@@ -15,13 +15,14 @@ const signInSchema = z.object({
 export const signin = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password } = signInSchema.parse(req.body);
+    console.log(email);
 
     const userHasRegistered = await db
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email))
       .execute();
-
+    console.log(userHasRegistered);
     if (userHasRegistered[0].email !== email) {
       res.status(403).send(`User with ${email} already exists`);
       throw new MechalinkAlreadyExists(`User with ${email} already exists`);

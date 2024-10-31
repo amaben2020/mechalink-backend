@@ -1,6 +1,8 @@
+import { signupSchema } from 'controller/auth/auth.register.ts';
 import { eq } from 'drizzle-orm';
 import { db } from 'src/db.js';
 import { usersTable } from 'src/schema.ts';
+import { z } from 'zod';
 
 export const isUserExist = async (
   email: string
@@ -23,7 +25,6 @@ export const createUser = async ({
   addressOne,
   role,
   lastName,
-  lastLogin,
   city,
   country,
   addressTwo,
@@ -31,23 +32,26 @@ export const createUser = async ({
   phone,
   username,
   password,
-}: any) => {
+  firstName,
+  firebaseId,
+}: z.infer<typeof signupSchema> & { firebaseId: string }) => {
   try {
-    const user = await db
+    const [user = undefined] = await db
       .insert(usersTable)
       .values({
         email,
         password,
-        firstName: username,
+        username,
+        firstName,
         addressOne,
         role,
         lastName,
-        lastLogin,
         city,
         country,
         addressTwo,
         zip,
         phone,
+        firebaseId,
       })
       .returning();
 

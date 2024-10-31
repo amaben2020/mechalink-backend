@@ -31,6 +31,7 @@ export function enumFromConst<T extends Record<string, string>>(obj: T) {
   const values = extractValuesAsTuple(obj);
   return z.enum(values);
 }
+
 export const AccountType = {
   CUSTOMER: 'CUSTOMER', // for companies
   PROVIDER: 'PROVIDER', // for individual provider
@@ -48,7 +49,7 @@ export const mechanics = pgTable('mechanics', {
   updated_at: timestamp('updated_at', { withTimezone: true }),
   userId: integer('user_id').references(() => usersTable.id),
   arrivalRate: integer('arrival_rate'),
-  jobCount: integer('jobCount'),
+  jobCount: integer('jobCount').default(0),
   status: varchar('status', {
     enum: Object.values(MechanicStatuses) as [string],
     length: 256,

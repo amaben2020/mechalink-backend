@@ -1,4 +1,5 @@
 import { jobsSchema } from 'controller/jobs/job.create.js';
+import { eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
 import { jobs } from 'src/schema/job.ts';
@@ -42,6 +43,19 @@ export const getJobs = async () => {
     const jobsData = await db.select().from(jobs);
 
     return jobsData;
+  } catch (error) {
+    if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
+  }
+};
+
+export const getJob = async (id: number) => {
+  try {
+    const [job = undefined] = await db
+      .select()
+      .from(jobs)
+      .where(eq(jobs.id, id));
+
+    return job;
   } catch (error) {
     if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
   }

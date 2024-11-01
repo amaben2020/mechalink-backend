@@ -47,7 +47,9 @@ export const mechanics = pgTable('mechanics', {
     .notNull(),
   updated_by: varchar('updated_by', { length: 256 }),
   updated_at: timestamp('updated_at', { withTimezone: true }),
-  userId: integer('user_id').references(() => usersTable.id),
+  userId: integer('user_id')
+    .references(() => usersTable.id)
+    .unique(),
   arrivalRate: integer('arrival_rate'),
   jobCount: integer('jobCount').default(0),
   status: varchar('status', {
@@ -55,7 +57,6 @@ export const mechanics = pgTable('mechanics', {
     length: 256,
   }),
   lastKnownLocationTimestamp: timestamp('last_known_location_timestamp', {}),
-  // mobileAppOs: mobileOsEnum('mobile_app_os'),
   type: text('type', { enum: enumFromConst(AccountType).options }).notNull(),
 });
 

@@ -1,7 +1,7 @@
 {
-  "name": "ec2",
+  "name": "Mechalink App",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "server.ts",
   "type": "module",
   "scripts": {
     "start": "tsx server.ts",
@@ -48,7 +48,7 @@
     "@types/cookie-parser": "^1.4.7",
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
-    "@types/node": "^22.7.9",
+    "@types/node": "^22.9.0",
     "drizzle-kit": "^0.26.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.1",

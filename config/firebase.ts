@@ -8,7 +8,8 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import admin from 'firebase-admin';
-import config from './firebaseService.json' assert { type: 'json' };
+// import config from './firebaseService.json' assert { type: 'json' };
+const config = await import('./firebaseService.json');
 
 dotenv.config();
 

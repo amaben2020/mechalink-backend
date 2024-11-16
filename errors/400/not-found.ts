@@ -1,4 +1,4 @@
-import { MechalinkError } from '../mechalink-error.js';
+import { MechalinkError } from 'errors/mechalink-error.js';
 
 export class MechalinkAlreadyExists extends MechalinkError {
   constructor(message = 'NotFound') {

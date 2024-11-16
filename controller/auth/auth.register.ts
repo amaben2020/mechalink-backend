@@ -1,13 +1,17 @@
 import { z, ZodError } from 'zod';
-import { signupUser } from '../../services/auth/index.js';
+
 import { db } from '../../src/db.js';
-import { usersTable } from '../../src/schema.js';
-import bcrypt from 'bcrypt';
+import { usersTable } from '../../src/schema.ts';
+
 import { eq } from 'drizzle-orm';
 import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';
 
-const signupSchema = z.object({
+import firebaseAuthController from 'services/auth/firebase.js';
+import express from 'express';
+import { createUser } from 'core/auth.ts';
+
+export const signupSchema = z.object({
   username: z.string().min(2),
   password: z.string().min(4),
   email: z.string().email(),
@@ -15,8 +19,6 @@ const signupSchema = z.object({
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phone: z.string(),
-  lastLogin: z.string().optional(),
-  addressOne: z.string().optional(),
   addressTwo: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
@@ -25,7 +27,7 @@ const signupSchema = z.object({
   role: z.enum(['admin', 'client', 'mechanic']),
 });
 
-export const signup = async (req, res) => {
+export const signup = async (req: express.Request, res: express.Response) => {
   try {
     const {
       email,
@@ -34,7 +36,6 @@ export const signup = async (req, res) => {
       addressOne,
       firstName,
       lastName,
-      lastLogin,
       city,
       country,
       addressTwo,
@@ -54,32 +55,33 @@ export const signup = async (req, res) => {
       throw new MechalinkAlreadyExists(`User with ${email} already exists`);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const fbUserData = await firebaseAuthController.register({
+      email,
+      password,
+    });
 
-    signupUser(username, password, email);
+    const user = await createUser({
+      email,
+      username,
+      firstName,
+      addressOne,
+      role,
+      lastName,
+      city,
+      country,
+      addressTwo,
+      zip,
+      phone,
+      firebaseId: fbUserData?.uid ?? '',
+      password,
+    });
 
-    const user = await db
-      .insert(usersTable)
-      .values({
-        email,
-        password: hashedPassword,
-        firstName: username,
-        addressOne,
-        role,
-        lastName,
-        lastLogin,
-        city,
-        country,
-        addressTwo,
-        zip,
-        phone,
-      })
-      .returning();
-
-    res.json({ user });
+    res
+      .status(201)
+      .json({ message: `User id:${user?.id} created successfully` });
   } catch (error) {
     const validationError = fromError(error);
-
+    console.log(error);
     res.status(500).send(validationError.toString());
   }
 };

@@ -2,7 +2,7 @@ export const JobRequestStatuses = {
   ACCEPTED: 'ACCEPTED',
   NOTIFYING: 'NOTIFYING',
   DECLINED: 'DECLINED',
-};
+} as const;
 
 export const JobStatuses = {
   //Mechanic has arrived destination and has started working on it
@@ -14,11 +14,17 @@ export const JobStatuses = {
   COMPLETED: 'COMPLETED',
   // No mechanic could resolve the issue
   CANCELED: 'CANCELED',
-};
+} as const;
 
 export const MechanicStatuses = {
   ACCEPTED: 'APPROVED',
-  NOTIFYING: 'UNAPPROVED',
+  UNAPPROVED: 'UNAPPROVED',
   DECLINED: 'OUT_OF_SERVICE',
   BANNED: 'BANNED',
-};
+} as const;
+
+export const UserRoles = {
+  client: 'client',
+  mechanic: 'mechanic',
+  admin: 'admin',
+} as const;

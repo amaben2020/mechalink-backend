@@ -1,4 +1,4 @@
-import { JobRequestStatuses } from '@/constants/constants';
+import { JobRequestStatuses } from '../../constants/constants.ts';
 import { relations } from 'drizzle-orm';
 import {
   text,
@@ -9,8 +9,8 @@ import {
   bigint,
   integer,
 } from 'drizzle-orm/pg-core';
-import { jobs } from './job';
-import { mechanics } from './mechanic';
+import { jobs } from './job.ts';
+import { mechanics } from './mechanic.ts';
 
 export const jobRequests = pgTable('jobRequests', {
   id: serial('id').primaryKey(),
@@ -21,7 +21,7 @@ export const jobRequests = pgTable('jobRequests', {
   updated_by: varchar('updated_by', { length: 256 }),
   updated_at: timestamp('updated_at', { withTimezone: true }),
   status: varchar('status', {
-    enum: Object.values(JobRequestStatuses),
+    enum: Object.values(JobRequestStatuses) as [string, ...string[]],
     length: 256,
   }).default(JobRequestStatuses.NOTIFYING),
   jobId: bigint('job_id', { mode: 'number' })

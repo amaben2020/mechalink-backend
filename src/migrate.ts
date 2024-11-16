@@ -6,6 +6,7 @@ import { config } from 'dotenv';
 config({ path: '.env' });
 
 const sql = neon(
+  //@ts-ignore
   process.env.NODE_ENV === 'development'
     ? process.env.DATABASE_URL_DEV
     : process.env.DATABASE_URL_PROD

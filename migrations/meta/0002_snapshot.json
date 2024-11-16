@@ -1,6 +1,6 @@
 {
-  "id": "5c43673b-77f9-401a-96c5-c01f3fea88b8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "58264d1b-34dc-47c0-9b53-eea2c89f4cb1",
+  "prevId": "c70742ff-6808-4385-8947-bf13259c5c9e",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -223,6 +223,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -233,6 +239,19 @@
           "tableTo": "mechanics",
           "columnsFrom": [
             "mechanic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "jobs_user_id_users_id_fk": {
+          "name": "jobs_user_id_users_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -296,7 +315,8 @@
           "name": "jobCount",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": 0
         },
         "status": {
           "name": "status",
@@ -334,7 +354,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "mechanics_user_id_unique": {
+          "name": "mechanics_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.users": {

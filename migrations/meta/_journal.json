@@ -5,8 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1729276853648,
-      "tag": "0000_plain_gorilla_man",
+      "when": 1730041670249,
+      "tag": "0000_freezing_mariko_yashida",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1730320823086,
+      "tag": "0001_yellow_calypso",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730411141619,
+      "tag": "0002_tiny_zeigeist",
       "breakpoints": true
     }
   ]

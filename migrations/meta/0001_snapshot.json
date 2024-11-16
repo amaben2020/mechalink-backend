@@ -1,6 +1,6 @@
 {
-  "id": "5c43673b-77f9-401a-96c5-c01f3fea88b8",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "c70742ff-6808-4385-8947-bf13259c5c9e",
+  "prevId": "657384fa-99bf-450f-8e02-13010f5c34f0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -223,6 +223,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -233,6 +239,19 @@
           "tableTo": "mechanics",
           "columnsFrom": [
             "mechanic_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "jobs_user_id_users_id_fk": {
+          "name": "jobs_user_id_users_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
           ],
           "columnsTo": [
             "id"

@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
 } from 'firebase/auth';
 import admin from 'firebase-admin';
-import config from './firebaseService.json' assert { type: 'json' };
+import { fbaseConfig } from './firebaseService.ts';
 
 dotenv.config();
 
@@ -22,7 +22,7 @@ const firebaseConfig = {
 };
 
 export const firebaseAdmin = admin.initializeApp({
-  credential: admin.credential.cert(config as any),
+  credential: admin.credential.cert(fbaseConfig as any),
 });
 
 const firebaseApp = initializeApp(firebaseConfig);

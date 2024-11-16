@@ -3,7 +3,7 @@ import { app } from './app.js';
 let server;
 
 server = app.listen(process.env.PORT, () => {
-  console.log('Running...');
+  console.log('Running now...');
 });
 
 const exitHandler = () => {

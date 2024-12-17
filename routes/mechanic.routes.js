@@ -1,12 +1,15 @@
 import express from 'express';
 import { authenticatedRoute } from '../middleware/index.js';
 import trimRequest from 'trim-request';
-import { createMech } from './../controller/mechanics/mechanic.create';
+import { mechanicCreateController } from 'controller/mechanics/mechanic.create.ts';
+
 const router = express.Router();
 
-router.route('/').post(trimRequest.all, authenticatedRoute, createMech);
+router
+  .route('/')
+  .post(trimRequest.all, authenticatedRoute, mechanicCreateController);
 
 // public routes
-// router.route('').get(createMech);
+// router.route('').get(mechanicCreateController);
 
 export default router;

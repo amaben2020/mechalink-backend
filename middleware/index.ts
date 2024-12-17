@@ -11,6 +11,7 @@ export const authenticatedRoute = (
   if (!idToken) {
     throw new MechalinkError('Unauthenticated', 403);
   }
+
   firebaseAdmin
     .auth()
     .verifyIdToken(idToken as string)

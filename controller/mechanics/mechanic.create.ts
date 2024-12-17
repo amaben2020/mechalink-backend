@@ -16,7 +16,7 @@ export const mechanicSchemaType = z.object({
   userId: z.number(),
 });
 
-export const createMech = async (
+export const mechanicCreateController = async (
   req: express.Request,
   res: express.Response
 ) => {

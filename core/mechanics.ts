@@ -1,6 +1,5 @@
 import { mechanicSchemaType } from 'controller/mechanics/mechanic.create.ts';
 import { db } from 'src/db.ts';
-import { mechanicSchema } from 'src/schema.ts';
 import { mechanics } from 'src/schema/mechanic.ts';
 import { z } from 'zod';
 

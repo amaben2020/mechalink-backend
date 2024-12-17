@@ -1,3 +1,5 @@
+// using Haversine formula
+
 export function calculateDistance(
   lat1: number,
   lng1: number,

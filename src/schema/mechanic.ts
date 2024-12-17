@@ -58,6 +58,8 @@ export const mechanics = pgTable('mechanics', {
   }),
   lastKnownLocationTimestamp: timestamp('last_known_location_timestamp', {}),
   type: text('type', { enum: enumFromConst(AccountType).options }).notNull(),
+  lat: text('lat').notNull().default('8.8888'),
+  lng: text('lng').notNull().default('7.8888'),
 });
 
 // one job can have one mechanic but one mechanic can have many jobs

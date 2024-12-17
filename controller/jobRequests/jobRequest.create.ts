@@ -5,7 +5,10 @@ import { mechanicSchema } from 'src/schema.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 
-import { createJobRequest } from 'core/jobRequests.ts';
+import {
+  createJobRequest,
+  getMechanicsWithinRadius,
+} from 'core/jobRequests.ts';
 
 export const jobRequestSchemaType = z.object({
   created_by: z.string(),
@@ -38,7 +41,9 @@ export const jobRequestCreateController = async (
       duration,
       jobId,
     });
+    const nearbyMechanics = await getMechanicsWithinRadius(jobRequest[0].id);
     console.log(jobRequest);
+    console.log('nearbyMechanics', nearbyMechanics);
     res.status(201).json({ jobRequest });
   } catch (error) {
     console.log(error);

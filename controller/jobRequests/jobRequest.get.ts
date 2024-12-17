@@ -1,3 +1,4 @@
+import { getMechanicsWithinRadius } from 'core/jobRequests.ts';
 import { eq } from 'drizzle-orm';
 import express from 'express';
 import { db } from 'src/db.ts';
@@ -28,12 +29,16 @@ export const jobRequestForMechanicGetController = async (
       .from(jobRequestSchema)
       .where(eq(jobRequestSchema.mechanicId, Number(mechanicId)));
 
+    const [nearbyMechanics = undefined] = (
+      await getMechanicsWithinRadius(jobRequest[0].id)
+    ).filter((elem) => elem.id === Number(mechanicId));
+
     if (!jobRequest.length) {
       res.json({ message: 'No Job request found for this mechanic' });
       return;
     }
 
-    res.json(jobRequest);
+    res.json(nearbyMechanics);
   } catch (error) {
     console.log(error);
   }

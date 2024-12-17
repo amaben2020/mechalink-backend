@@ -22,6 +22,20 @@
       "when": 1730411141935,
       "tag": "0002_unknown_rhino",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1734446245214,
+      "tag": "0003_mighty_maximus",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1734447635007,
+      "tag": "0004_charming_killmonger",
+      "breakpoints": true
     }
   ]
 }

@@ -30,6 +30,8 @@ export const jobRequests = pgTable('jobRequests', {
   mechanicId: integer('mechanic_id').references(() => mechanics.id),
   distance: text('distance'),
   duration: text('duration'),
+  lat: text('lat').notNull().default('8.9855'),
+  lng: text('lng').notNull().default('7.8888'),
 });
 
 // a job can have many requests, only one mechanic can be added to a jobRequest

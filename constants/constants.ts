@@ -2,6 +2,7 @@ export const JobRequestStatuses = {
   ACCEPTED: 'ACCEPTED',
   NOTIFYING: 'NOTIFYING',
   DECLINED: 'DECLINED',
+  ON_THE_WAY: 'ON_THE_WAY',
 } as const;
 
 export const JobStatuses = {

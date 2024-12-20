@@ -1,5 +1,6 @@
 import { signupSchema } from 'controller/auth/auth.register.ts';
 import { eq } from 'drizzle-orm';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
 import { usersTable } from 'src/schema.ts';
 import { z } from 'zod';
@@ -57,6 +58,6 @@ export const createUser = async ({
 
     return user;
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) throw new MechalinkError(error?.message, 400);
   }
 };

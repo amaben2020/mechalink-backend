@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import express from 'express';
 import { db } from 'src/db.ts';
-import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
+import { jobRequestSchema } from 'src/schema.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 

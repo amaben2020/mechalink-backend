@@ -1,7 +1,7 @@
 export const fbaseConfig = {
   type: 'service_account',
   project_id: 'mechalink-auth',
-  private_key_id: 'c4e2e4537ae310703dd601660b105831e1af3b93',
+  private_key_id: 'bf09c4b66a7c10e85cd36446a55ef1235e616592',
   private_key: process.env.FIREBASE_CERT,
   client_email:
     'firebase-adminsdk-teohd@mechalink-auth.iam.gserviceaccount.com',

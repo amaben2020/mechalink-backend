@@ -2,6 +2,7 @@ import { JobRequestStatuses } from 'constants/constants.ts';
 import { jobRequestSchemaType } from 'controller/jobRequests/jobRequest.create.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkRequired } from 'errors/400/required-error.ts';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.ts';
 import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
 import { calculateDistance } from 'utils/calculateDistance.ts';
@@ -113,6 +114,6 @@ export const updateJobRequestStatus = async (
 
     // the client needs to confirm this too (🧠)
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) throw new MechalinkError(error?.message, 400);
   }
 };

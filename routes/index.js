@@ -3,6 +3,7 @@ import authRoutes from './auth.routes.js';
 import jobRoutes from './job.routes.js';
 import mechanicRoutes from './mechanic.routes.js';
 import jobRequestRoutes from './jobRequest.routes.js';
+import userRoutes from './user.routes.js';
 
 const router = express.Router();
 
@@ -11,5 +12,6 @@ router.use('/auth', authRoutes);
 router.use('/jobs', jobRoutes);
 router.use('/mechanics', mechanicRoutes);
 router.use('/jobRequests', jobRequestRoutes);
+router.use('/users', userRoutes);
 
 export default router;

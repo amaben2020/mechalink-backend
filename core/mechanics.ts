@@ -1,4 +1,5 @@
 import { mechanicSchemaType } from 'controller/mechanics/mechanic.create.ts';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.ts';
 import { mechanics } from 'src/schema/mechanic.ts';
 import { z } from 'zod';
@@ -26,5 +27,6 @@ export const createMechanic = ({
     return mechanic;
   } catch (error) {
     console.log(error);
+    if (error instanceof Error) throw new MechalinkError(error?.message, 400);
   }
 };

@@ -28,17 +28,9 @@ export const jobRequestCreateController = async (
     const { created_by, distance, duration, jobId } =
       jobRequestSchemaType.parse(req.body);
 
-    // const [mechanic = undefined] = await db
-    //   .select()
-    //   .from(mechanicSchema)
-    //   .where(eq(mechanicSchema.id, mechanicId));
-
-    // if (!mechanic) throw new MechalinkError('Not found', 404);
-
     //@ts-ignore
     const jobRequest = await createJobRequest({
       created_by,
-      // mechanicId,
       distance,
       duration,
       jobId,

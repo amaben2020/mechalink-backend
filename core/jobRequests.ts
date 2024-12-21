@@ -66,7 +66,8 @@ export async function getMechanicsWithinRadius(
 //PUT req that gets the jobREQ, mechanicId etc
 export const updateJobRequestStatus = async (
   id: number,
-  status: keyof typeof JobRequestStatuses
+  status: keyof typeof JobRequestStatuses,
+  mechanicId: number
 ) => {
   try {
     // check for the request if its existent
@@ -78,6 +79,20 @@ export const updateJobRequestStatus = async (
     if (!jobRequest) {
       throw new MechalinkRequired('Not found');
     }
+
+    // ensure the mechanic is selected
+    if (status === JobRequestStatuses.NOTIFYING) {
+      const res = await db
+        .update(jobRequestSchema)
+        .set({
+          mechanicId,
+          status,
+        })
+        .returning();
+
+      return res;
+    }
+
     // start the timer when the mechanic says hes on the way
     const timer = Timer.getInstance();
 

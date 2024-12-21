@@ -7,6 +7,7 @@ import { MechalinkError } from 'errors/mechalink-error.ts';
 
 import { updateJobRequestStatus } from 'core/jobRequests.ts';
 import { JobRequestStatuses } from 'constants/constants.ts';
+import { getMechanicById } from 'core/mechanics.ts';
 
 export const jobRequestSchemaType = z.object({
   status: z.string(),
@@ -54,6 +55,7 @@ export const jobRequestUpdateController = async (
   }
 };
 
+// refactor and move to core
 export const jobRequestSelectMechanicController = async (
   req: express.Request,
   res: express.Response
@@ -63,10 +65,7 @@ export const jobRequestSelectMechanicController = async (
       req.body
     );
 
-    const [mechanic = undefined] = await db
-      .select()
-      .from(mechanicSchema)
-      .where(eq(mechanicSchema.id, mechanicId));
+    const mechanic = await getMechanicById(mechanicId);
 
     if (!mechanic) throw new MechalinkError('Not found', 404);
 
@@ -76,8 +75,6 @@ export const jobRequestSelectMechanicController = async (
       .where(eq(jobRequestSchema.id, Number(jobRequestId)));
 
     if (!jobRequest) throw new MechalinkError('Not found', 404);
-
-    // here we wanna run a transaction or something that would update both job and jobRequest
 
     const updateJobRequest = await updateJobRequestStatus(
       Number(jobRequestId),

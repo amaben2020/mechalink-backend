@@ -9,6 +9,7 @@ import { calculateDistance } from 'utils/calculateDistance.ts';
 import { Timer } from 'utils/timer.ts';
 import { z } from 'zod';
 import { getJob } from './jobs.ts';
+import { getMechanicById } from './mechanics.ts';
 
 export const createJobRequest = async (
   data: z.infer<typeof jobRequestSchemaType> & { userId: number }
@@ -82,11 +83,28 @@ export const updateJobRequestStatus = async (
 
     // ensure the mechanic is selected
     if (status === JobRequestStatuses.NOTIFYING) {
+      const mech = await getMechanicById(mechanicId);
+      const job = await getJob(jobRequest.jobId);
+      console.log(
+        job?.latitude!,
+        job?.longitude!,
+        Number(mech?.lat!),
+        Number(mech?.lng!)
+      );
+      const distance = calculateDistance(
+        job?.latitude!,
+        job?.longitude!,
+        Number(mech?.lat!),
+        Number(mech?.lng!)
+      );
+
+      console.log('distance', distance);
       const res = await db
         .update(jobRequestSchema)
         .set({
           mechanicId,
           status,
+          distance: `${String(distance.toFixed(2))}km`,
         })
         .returning();
 

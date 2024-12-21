@@ -5,7 +5,10 @@ import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 
-import { updateJobRequestStatus } from 'core/jobRequests.ts';
+import {
+  updateJobRequestByMechanic,
+  updateJobRequestByUser,
+} from 'core/jobRequests.ts';
 import { JobRequestStatuses } from 'constants/constants.ts';
 import { getMechanicById } from 'core/mechanics.ts';
 
@@ -24,6 +27,7 @@ export const jobRequestUpdateController = async (
       req.body
     );
 
+    // todo: move to correct file
     const [mechanic = undefined] = await db
       .select()
       .from(mechanicSchema)
@@ -31,6 +35,7 @@ export const jobRequestUpdateController = async (
 
     if (!mechanic) throw new MechalinkError('Not found', 404);
 
+    // todo: move to correct file
     const [jobRequest = undefined] = await db
       .select()
       .from(jobRequestSchema)
@@ -40,7 +45,7 @@ export const jobRequestUpdateController = async (
 
     // here we wanna run a transaction or something that would update both job and jobRequest
 
-    const updateJobRequest = await updateJobRequestStatus(
+    const updateJobRequest = await updateJobRequestByMechanic(
       Number(jobRequestId),
       status as any,
       mechanicId
@@ -76,13 +81,11 @@ export const jobRequestSelectMechanicController = async (
 
     if (!jobRequest) throw new MechalinkError('Not found', 404);
 
-    const updateJobRequest = await updateJobRequestStatus(
+    const updateJobRequest = await updateJobRequestByUser(
       Number(jobRequestId),
       status as any,
       mechanicId
     );
-
-    console.log(updateJobRequest);
 
     res.status(201).json({ jobRequest: updateJobRequest });
   } catch (error) {

@@ -40,6 +40,8 @@ export const getMechanicById = async (mechanicId: number) => {
       .from(mechanicSchema)
       .where(eq(mechanicSchema.id, mechanicId));
 
+    if (!mechanic) throw new MechalinkError('Not found', 404);
+
     return mechanic;
   } catch (error) {
     throw new MechalinkError('Mechanic not found', 404);

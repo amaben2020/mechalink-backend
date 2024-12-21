@@ -23,5 +23,6 @@ router
   .get(trimRequest.all, jobRequestForMechanicGetController);
 
 router.route('/user').put(trimRequest.all, jobRequestSelectMechanicController);
+router.route('/mechanic').put(trimRequest.all, jobRequestUpdateController);
 
 export default router;

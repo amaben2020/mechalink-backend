@@ -1,4 +1,4 @@
-import { JobRequestStatuses } from 'constants/constants.ts';
+import { JobRequestStatuses, JobStatuses } from 'constants/constants.ts';
 import { jobRequestSchemaType } from 'controller/jobRequests/jobRequest.create.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkRequired } from 'errors/400/required-error.ts';
@@ -10,6 +10,7 @@ import { Timer } from 'utils/timer.ts';
 import { z } from 'zod';
 import { getJob } from './jobs.ts';
 import { getMechanicById } from './mechanics.ts';
+import { jobs } from 'src/schema/job.ts';
 
 export const createJobRequest = async (
   data: z.infer<typeof jobRequestSchemaType> & { userId: number }
@@ -62,10 +63,121 @@ export async function getMechanicsWithinRadius(
   });
 }
 
-// update jobRequest status when a mechanic accepts a job
-// updateJobRequestStatus(1, ON_THE_WAY);
-//PUT req that gets the jobREQ, mechanicId etc
-export const updateJobRequestStatus = async (
+export const updateJobRequestByMechanic = async (
+  id: number,
+  status: keyof typeof JobRequestStatuses,
+  mechanicId: number
+) => {
+  try {
+    // check for the request if its existent
+    const [jobRequest = undefined] = await db
+      .select()
+      .from(jobRequestSchema)
+      .where(eq(jobRequestSchema.id, id));
+
+    if (!jobRequest) {
+      throw new MechalinkRequired('Not found');
+    }
+
+    const job = await getJob(jobRequest.jobId);
+    // ensure the mechanic is selected when update is made
+    if (status === JobRequestStatuses.NOTIFYING) {
+      const mech = await getMechanicById(mechanicId);
+
+      const distance = calculateDistance(
+        job?.latitude!,
+        job?.longitude!,
+        Number(mech?.lat!),
+        Number(mech?.lng!)
+      );
+
+      const res = await db
+        .update(jobRequestSchema)
+        .set({
+          mechanicId,
+          status,
+          distance: `${String(distance.toFixed(2))}km`,
+        })
+        .returning();
+
+      return res;
+    }
+
+    // start the timer when the mechanic says hes on the way
+    const timer = Timer.getInstance();
+
+    console.log('timer', timer);
+    console.log('timer.getTimeLeft()', timer.getTimeLeft());
+
+    // if Status is ON_THE_WAY, start the timer and also ensure the job cannot be reassigned at that point to avoid conflicts
+
+    if (status === JobRequestStatuses.ON_THE_WAY) {
+      timer.start(10);
+
+      const update = await db
+        .update(jobRequestSchema)
+        .set({
+          status: JobRequestStatuses.ON_THE_WAY,
+        })
+        .returning();
+
+      await db
+        .update(jobs)
+        .set({
+          status: JobStatuses.ON_THE_WAY,
+        })
+        .where(eq(jobs.id, Number(job?.id)));
+
+      return update;
+
+      // neon doesn't support transactions
+      // const update = await db.transaction(async (tx) => {
+      //   await tx
+      //     .update(jobRequestSchema)
+      //     .set({
+      //       status: JobRequestStatuses.ON_THE_WAY,
+      //     })
+      //     .where(eq(jobRequestSchema.id, jobRequest.id))
+      //     .returning();
+
+      //   await tx
+      //     .update(jobs)
+      //     .set({
+      //       status: JobStatuses.ON_THE_WAY,
+      //     })
+      //     .where(eq(jobs.id, Number(job?.id)))
+      //     .returning();
+      // });
+
+      console.log('UPDATE', update);
+
+      return update;
+    }
+
+    // if timer remains and status is ACCEPTED, update the job to inprogress
+    if (timer.getTimeLeft() && status === 'ACCEPTED') {
+      // perform the PUT here
+      const updateJobReq = await db.update(jobRequestSchema).set({
+        status: JobRequestStatuses.ACCEPTED,
+      });
+      console.log(updateJobReq);
+
+      timer.stop();
+
+      // await db.transaction(async ( ) => {});
+
+      return updateJobReq;
+    } else {
+      await db.update(jobRequestSchema).set({
+        status: JobRequestStatuses.NOTIFYING,
+      });
+    }
+  } catch (error) {
+    if (error instanceof Error) throw new MechalinkError(error?.message, 400);
+  }
+};
+
+export const updateJobRequestByUser = async (
   id: number,
   status: keyof typeof JobRequestStatuses,
   mechanicId: number
@@ -85,12 +197,7 @@ export const updateJobRequestStatus = async (
     if (status === JobRequestStatuses.NOTIFYING) {
       const mech = await getMechanicById(mechanicId);
       const job = await getJob(jobRequest.jobId);
-      console.log(
-        job?.latitude!,
-        job?.longitude!,
-        Number(mech?.lat!),
-        Number(mech?.lng!)
-      );
+
       const distance = calculateDistance(
         job?.latitude!,
         job?.longitude!,
@@ -98,7 +205,6 @@ export const updateJobRequestStatus = async (
         Number(mech?.lng!)
       );
 
-      console.log('distance', distance);
       const res = await db
         .update(jobRequestSchema)
         .set({

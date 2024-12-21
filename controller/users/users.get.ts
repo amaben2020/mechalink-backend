@@ -12,7 +12,7 @@ export const getUsers = async (req: express.Request, res: express.Response) => {
       !String(role).includes(UserRoles.client) &&
       !String(role)?.includes(UserRoles.mechanic)
     ) {
-      res.status(403).send('Role does not exist');
+      res.status(403).send('Role does not exist, enter client or mechanic');
       throw new MechalinkError('Role does not exist', 403);
     }
 

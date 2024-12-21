@@ -22,6 +22,7 @@ export const jobRequestForMechanicGetController = async (
   res: express.Response
 ) => {
   try {
+    // this would be removed and PUT / assigned manually not upon creation
     const { mechanicId } = req.params;
 
     const jobRequest = await db

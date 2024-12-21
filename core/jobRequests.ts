@@ -8,18 +8,18 @@ import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
 import { calculateDistance } from 'utils/calculateDistance.ts';
 import { Timer } from 'utils/timer.ts';
 import { z } from 'zod';
+import { getJob } from './jobs.ts';
 
 export const createJobRequest = async (
-  data: z.infer<typeof jobRequestSchemaType>
+  data: z.infer<typeof jobRequestSchemaType> & { userId: number }
 ) => {
   try {
     const result = await db
       .insert(jobRequestSchema)
       .values({
         jobId: data.jobId,
-        mechanicId: data.mechanicId,
-        // later, the created by would be the user not admin, not super important for now
-        created_by: 'admin',
+        userId: data.userId,
+        created_by: String(data.userId),
         distance: data.distance,
         duration: data.duration,
       })
@@ -34,7 +34,7 @@ export const createJobRequest = async (
 // TODO: Extract to nearby-mechanics endpoint
 export async function getMechanicsWithinRadius(
   jobRequestId: number,
-  // in km: 1km is roughly a stadium's size for context
+  // in km: 1km is roughly a stadium's size for context 🏟️
   radius: number = 3
 ) {
   // TODO: Job request late,lng should be same as from the job
@@ -47,10 +47,12 @@ export async function getMechanicsWithinRadius(
 
   const mechanics = await db.select().from(mechanicSchema);
 
+  const job = await getJob(jobRequest.jobId);
+
   return mechanics.filter((mechanic: any) => {
     const distance = calculateDistance(
-      parseFloat(jobRequest?.lat!),
-      parseFloat(jobRequest?.lng!),
+      parseFloat(String(job?.latitude!)),
+      parseFloat(String(job?.longitude!)),
       parseFloat(mechanic.lat),
       parseFloat(mechanic.lng)
     );

@@ -36,6 +36,20 @@
       "when": 1734447634634,
       "tag": "0004_fat_wrecking_crew",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1734790616965,
+      "tag": "0005_nice_quicksilver",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1734798035268,
+      "tag": "0006_typical_skreet",
+      "breakpoints": true
     }
   ]
 }

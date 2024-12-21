@@ -16,3 +16,16 @@ export const getUsersByRole = async (role: keyof typeof UserRoles) => {
     throw new MechalinkError('Something went wrong', 500);
   }
 };
+
+export const getUserByFId = async (id: string) => {
+  try {
+    const user = await db
+      .select()
+      .from(usersTable)
+      .where(eq(usersTable.firebaseId, String(id)));
+
+    return user;
+  } catch (error) {
+    throw new MechalinkError('Something went wrong', 500);
+  }
+};

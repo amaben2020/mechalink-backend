@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { jobs } from './job.ts';
 import { mechanics } from './mechanic.ts';
+import { usersTable } from './user.ts';
 
 export const jobRequests = pgTable('jobRequests', {
   id: serial('id').primaryKey(),
@@ -28,10 +29,10 @@ export const jobRequests = pgTable('jobRequests', {
     .references(() => jobs.id)
     .notNull(),
   mechanicId: integer('mechanic_id').references(() => mechanics.id),
+  userId: integer('user_id').references(() => usersTable.id),
   distance: text('distance'),
+  // calculated based on the job type
   duration: text('duration'),
-  lat: text('lat').notNull().default('8.9855'),
-  lng: text('lng').notNull().default('7.8888'),
 });
 
 // a job can have many requests, only one mechanic can be added to a jobRequest
@@ -44,5 +45,11 @@ export const jobRequestRelations = relations(jobRequests, ({ one }) => ({
   mechanic: one(mechanics, {
     fields: [jobRequests.mechanicId],
     references: [mechanics.id],
+  }),
+
+  // so that in the job request history, we have this
+  user: one(usersTable, {
+    fields: [jobRequests.userId],
+    references: [usersTable.id],
   }),
 }));

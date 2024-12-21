@@ -36,6 +36,20 @@
       "when": 1734447635007,
       "tag": "0004_charming_killmonger",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1734790617307,
+      "tag": "0005_broad_james_howlett",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1734798035628,
+      "tag": "0006_grey_butterfly",
+      "breakpoints": true
     }
   ]
 }

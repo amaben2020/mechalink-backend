@@ -69,6 +69,20 @@ class FirebaseAuthController {
       console.error(error);
     }
   }
+
+  async getUserByFirebaseUid(firebaseUid: string) {
+    if (!firebaseUid) {
+      throw new MechalinkRequired('Firebase UID must be provided');
+    }
+
+    try {
+      const user = await firebaseAdmin.auth().getUser(firebaseUid);
+      return user;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to retrieve user by Firebase UID');
+    }
+  }
 }
 
 const firebaseAuthController = new FirebaseAuthController();

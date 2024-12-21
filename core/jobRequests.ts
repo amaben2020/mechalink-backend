@@ -149,22 +149,29 @@ export const updateJobRequestByMechanic = async (
       //     .returning();
       // });
 
-      console.log('UPDATE', update);
+      // console.log('UPDATE', update);
 
-      return update;
+      // return update;
     }
 
-    // if timer remains and status is ACCEPTED, update the job to inprogress
+    // if timer remains and status is ACCEPTED, update the job to inprogress...
     if (timer.getTimeLeft() && status === 'ACCEPTED') {
-      // perform the PUT here
-      const updateJobReq = await db.update(jobRequestSchema).set({
-        status: JobRequestStatuses.ACCEPTED,
-      });
-      console.log(updateJobReq);
+      // ensure this job cannot be assigned to other mechs
 
       timer.stop();
+      const updateJobReq = await db
+        .update(jobRequestSchema)
+        .set({
+          status: JobRequestStatuses.ACCEPTED,
+        })
+        .returning();
 
-      // await db.transaction(async ( ) => {});
+      await db
+        .update(jobs)
+        .set({
+          status: JobStatuses.IN_PROGRESS,
+        })
+        .where(eq(jobs.id, Number(job?.id)));
 
       return updateJobReq;
     } else {

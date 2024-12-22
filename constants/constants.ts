@@ -17,6 +17,13 @@ export const JobStatuses = {
   CANCELED: 'CANCELED',
 } as const;
 
+export const JobTimerStatuses = {
+  RUNNING: 'RUNNING',
+  NOT_STARTED: 'NOT_STARTED',
+  APPROVED: 'APPROVED',
+  STOPPED: 'STOPPED',
+};
+
 export const MechanicStatuses = {
   ACCEPTED: 'APPROVED',
   UNAPPROVED: 'UNAPPROVED',

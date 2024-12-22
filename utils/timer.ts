@@ -1,21 +1,3 @@
-// export const startTimer = (durationInMinutes = 10) => {
-//   let timeLeft = durationInMinutes * 60; // Convert minutes to seconds
-//   let minutes = Math.floor(timeLeft / 60);
-//   let seconds = timeLeft % 60;
-//   const timerInterval = setInterval(() => {
-//     console.log(`Time Left: ${minutes}m ${seconds}s`);
-
-//     if (timeLeft <= 0) {
-//       clearInterval(timerInterval); // Stop the timer
-//       console.log('Timer finished!');
-//     }
-
-//     timeLeft--; // Decrement time left
-//   }, 1000); // Run every second
-
-//   return `Time Left: ${minutes}m ${seconds}s`;
-// };
-
 // Singleton Timer Implementation
 export class Timer {
   private static instance: Timer;
@@ -94,4 +76,3 @@ export class Timer {
 
 // Somewhere else in the app
 const sameTimer = Timer.getInstance();
-console.log(sameTimer.getTimeLeft()); // Check remaining time

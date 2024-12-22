@@ -50,6 +50,13 @@
       "when": 1734798035628,
       "tag": "0006_grey_butterfly",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1734864141635,
+      "tag": "0007_cooing_black_tarantula",
+      "breakpoints": true
     }
   ]
 }

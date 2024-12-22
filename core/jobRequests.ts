@@ -174,11 +174,42 @@ export const updateJobRequestByMechanic = async (
         .where(eq(jobs.id, Number(job?.id)));
 
       return updateJobReq;
-    } else {
+    }
+
+    if (timer.getTimeLeft() && status === 'DECLINED') {
+      const res = await db
+        .update(jobRequestSchema)
+        .set({
+          status: JobRequestStatuses.DECLINED,
+        })
+        .returning();
+
+      await db
+        .update(jobs)
+        .set({
+          status: JobStatuses.NOTIFYING,
+        })
+        .where(eq(jobs.id, Number(job?.id)));
+
+      return res;
+    }
+
+    if (jobRequest.status === JobRequestStatuses.DECLINED) {
       await db.update(jobRequestSchema).set({
         status: JobRequestStatuses.NOTIFYING,
       });
     }
+
+    // RESET TO NOTIFYING WHEN TIME ELAPSES
+    await db.update(jobRequestSchema).set({
+      status: JobRequestStatuses.NOTIFYING,
+    });
+    await db
+      .update(jobs)
+      .set({
+        status: JobStatuses.NOTIFYING,
+      })
+      .where(eq(jobs.id, Number(job?.id)));
   } catch (error) {
     if (error instanceof Error) throw new MechalinkError(error?.message, 400);
   }
@@ -245,7 +276,6 @@ export const updateJobRequestByUser = async (
       const updateJobReq = await db.update(jobRequestSchema).set({
         status: JobRequestStatuses.ACCEPTED,
       });
-      console.log(updateJobReq);
 
       timer.stop();
 
@@ -255,6 +285,7 @@ export const updateJobRequestByUser = async (
     } else {
       await db.update(jobRequestSchema).set({
         status: JobRequestStatuses.NOTIFYING,
+        mechanicId: undefined,
       });
     }
 

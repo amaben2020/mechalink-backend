@@ -28,11 +28,7 @@ export const jobRequestUpdateController = async (
       req.body
     );
 
-    // todo: move to correct file
-    const [mechanic = undefined] = await db
-      .select()
-      .from(mechanicSchema)
-      .where(eq(mechanicSchema.id, mechanicId));
+    const mechanic = await getMechanicById(mechanicId);
 
     if (!mechanic) throw new MechalinkError('Not found', 404);
 
@@ -41,6 +37,23 @@ export const jobRequestUpdateController = async (
       .select()
       .from(jobRequestSchema)
       .where(eq(jobRequestSchema.id, Number(jobRequestId)));
+
+    if (!mechanic?.id) {
+      res.status(404).json({
+        message: 'Mechanic not found',
+      });
+    }
+
+    if (mechanic?.id && !mechanic?.hasAcceptedTerms) {
+      // throw new MechalinkError(
+      //   'Mechanic must accept the Terms and Conditions to receive jobs.',
+      //   403
+      // );
+      res.status(403).json({
+        message:
+          'Mechanic must accept the Terms and Conditions to receive jobs.',
+      });
+    }
 
     if (!jobRequest) throw new MechalinkError('Not found', 404);
 
@@ -51,8 +64,6 @@ export const jobRequestUpdateController = async (
       status as any,
       mechanicId
     );
-
-    console.log(updateJobRequest);
 
     res.status(201).json({ jobRequest: updateJobRequest });
   } catch (error) {

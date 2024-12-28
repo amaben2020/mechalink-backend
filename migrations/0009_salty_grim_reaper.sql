@@ -1,0 +1,1 @@
+ALTER TABLE "mechanics" ADD COLUMN "terms_version" integer DEFAULT 0;

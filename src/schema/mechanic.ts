@@ -6,6 +6,7 @@ import {
   serial,
   integer,
   text,
+  boolean,
 } from 'drizzle-orm/pg-core';
 
 import { jobRequests } from './jobRequest.ts';
@@ -60,6 +61,9 @@ export const mechanics = pgTable('mechanics', {
   type: text('type', { enum: enumFromConst(AccountType).options }).notNull(),
   lat: text('lat').notNull().default('8.8888'),
   lng: text('lng').notNull().default('7.8888'),
+  hasAcceptedTerms: boolean('has_accepted_terms').default(false),
+  hasAcceptedTermsAt: timestamp('has_accepted_terms_at').defaultNow(),
+  termsVersion: integer('terms_version').default(0),
 });
 
 // one job can have one mechanic but one mechanic can have many jobs

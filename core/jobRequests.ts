@@ -51,6 +51,8 @@ export async function getMechanicsWithinRadius(
 
   const job = await getJob(jobRequest.jobId);
 
+  // do not avail mechs without agreement signed
+
   return mechanics.filter((mechanic: any) => {
     const distance = calculateDistance(
       parseFloat(String(job?.latitude!)),
@@ -84,6 +86,13 @@ export const updateJobRequestByMechanic = async (
     if (status === JobRequestStatuses.NOTIFYING) {
       const mech = await getMechanicById(mechanicId);
 
+      console.log('MECH', mech);
+      if (!mech?.hasAcceptedTerms) {
+        throw new Error(
+          'Mechanic must accept the Terms and Conditions to receive jobs.'
+        );
+      }
+
       const distance = calculateDistance(
         job?.latitude!,
         job?.longitude!,
@@ -105,9 +114,6 @@ export const updateJobRequestByMechanic = async (
 
     // start the timer when the mechanic says hes on the way
     const timer = Timer.getInstance();
-
-    console.log('timer', timer);
-    console.log('timer.getTimeLeft()', timer.getTimeLeft());
 
     // if Status is ON_THE_WAY, start the timer and also ensure the job cannot be reassigned at that point to avoid conflicts
 
@@ -176,7 +182,7 @@ export const updateJobRequestByMechanic = async (
       return updateJobReq;
     }
 
-    if (timer.getTimeLeft() && status === 'DECLINED') {
+    if (timer.getTimeLeft() && status === JobRequestStatuses.DECLINED) {
       const res = await db
         .update(jobRequestSchema)
         .set({
@@ -234,6 +240,14 @@ export const updateJobRequestByUser = async (
     // ensure the mechanic is selected
     if (status === JobRequestStatuses.NOTIFYING) {
       const mech = await getMechanicById(mechanicId);
+
+      console.log('MECH', mech);
+      if (!mech?.hasAcceptedTerms) {
+        throw new Error(
+          'Mechanic must accept the Terms and Conditions to receive jobs.'
+        );
+      }
+
       const job = await getJob(jobRequest.jobId);
 
       const distance = calculateDistance(
@@ -258,17 +272,12 @@ export const updateJobRequestByUser = async (
     // start the timer when the mechanic says hes on the way
     const timer = Timer.getInstance();
 
-    console.log('timer', timer);
-    console.log('timer.getTimeLeft()', timer.getTimeLeft());
-
     // if Status is ON_THE_WAY, start the timer and also ensure the job cannot be reassigned at that point to avoid conflicts
 
     if (status === 'ON_THE_WAY') {
       timer.start(10);
       console.log('STARTED....');
     }
-
-    console.log('timer.getTimeLeft() ', timer.getTimeLeft());
 
     // if timer remains and status is ACCEPTED, update the job to inprogress
     if (timer.getTimeLeft() && status === JobRequestStatuses.ACCEPTED) {

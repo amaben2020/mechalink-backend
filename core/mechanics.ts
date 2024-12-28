@@ -40,10 +40,45 @@ export const getMechanicById = async (mechanicId: number) => {
       .from(mechanicSchema)
       .where(eq(mechanicSchema.id, mechanicId));
 
-    if (!mechanic) throw new MechalinkError('Not found', 404);
+    // ensure the error is returned in the controller ✌🏾
+    // if (!mechanic) throw new MechalinkError('Not found', 404);
+
+    // if (mechanic?.id && !mechanic?.hasAcceptedTerms) {
+    //   throw new MechalinkError(
+    //     'Mechanic must accept the Terms and Conditions to receive jobs.',
+    //     403
+    //   );
+    // }
 
     return mechanic;
   } catch (error) {
+    console.log(error);
+    throw new MechalinkError('Mechanic not found', 404);
+  }
+};
+
+export const acceptTerms = async (mechanicId: number) => {
+  try {
+    const [mechanic = undefined] = await db
+      .select()
+      .from(mechanicSchema)
+      .where(eq(mechanicSchema.id, mechanicId));
+
+    if (!mechanic) throw new MechalinkError('Not found', 404);
+
+    const response = await db
+      .update(mechanicSchema)
+      .set({
+        hasAcceptedTerms: true,
+        hasAcceptedTermsAt: new Date(),
+      })
+      .where(eq(mechanicSchema.id, mechanicId))
+      .returning();
+
+    return response;
+  } catch (error) {
+    console.log(error);
+
     throw new MechalinkError('Mechanic not found', 404);
   }
 };

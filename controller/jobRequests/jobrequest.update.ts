@@ -18,6 +18,7 @@ export const jobRequestSchemaType = z.object({
   mechanicId: z.number(),
 });
 
+// once a user creates a job request, he shouldn't do anything until declined
 export const jobRequestUpdateController = async (
   req: express.Request,
   res: express.Response

@@ -26,20 +26,16 @@ export const createJobTimerController = async (
       .from(jobs)
       .where(eq(jobs.id, Number(jobId)));
 
-    console.log('JOB', job);
-
     if (job?.status === JobStatuses.ON_THE_WAY) {
       const timer = await new JobTimerService().startTimer({
         jobId,
         durationInMinutes,
       });
 
-      console.log('TIMER', timer);
-
       await db
         .update(jobs)
         .set({
-          status: JobStatuses.IN_PROGRESS,
+          status: JobStatuses.ON_THE_WAY,
         })
         .where(eq(jobs.id, Number(jobId)));
 

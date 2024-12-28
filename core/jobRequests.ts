@@ -271,22 +271,36 @@ export const updateJobRequestByUser = async (
     console.log('timer.getTimeLeft() ', timer.getTimeLeft());
 
     // if timer remains and status is ACCEPTED, update the job to inprogress
-    if (timer.getTimeLeft() && status === 'ACCEPTED') {
+    if (timer.getTimeLeft() && status === JobRequestStatuses.ACCEPTED) {
       // perform the PUT here
-      const updateJobReq = await db.update(jobRequestSchema).set({
-        status: JobRequestStatuses.ACCEPTED,
-      });
+      const updateJobReq = await db
+        .update(jobRequestSchema)
+        .set({
+          status: JobRequestStatuses.ACCEPTED,
+        })
+        .where(eq(jobRequestSchema.id, jobRequest.id));
+
+      // use trans if possible
+      const updateJob = await db
+        .update(jobs)
+        .set({
+          status: JobStatuses.IN_PROGRESS,
+        })
+        .returning();
 
       timer.stop();
 
       // await db.transaction(async ( ) => {});
 
-      return updateJobReq;
+      return { ...updateJobReq, job: updateJob };
     } else {
-      await db.update(jobRequestSchema).set({
-        status: JobRequestStatuses.NOTIFYING,
-        mechanicId: undefined,
-      });
+      await db
+        .update(jobRequestSchema)
+        .set({
+          status: JobStatuses.IN_PROGRESS,
+          mechanicId: undefined,
+        })
+        .where(eq(jobs.id, jobRequest.jobId));
     }
 
     // if the timer stops, return the jobReq status to NOTIFYING so that other mechs. can choose, also move the job to NOTIFYING

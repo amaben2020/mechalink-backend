@@ -22,7 +22,7 @@ export const signin = async (req: express.Request, res: express.Response) => {
       .from(usersTable)
       .where(eq(usersTable.email, email))
       .execute();
-    console.log(userHasRegistered);
+
     if (userHasRegistered[0].email !== email) {
       res.status(403).send(`User with ${email} already exists`);
       throw new MechalinkAlreadyExists(`User with ${email} already exists`);
@@ -40,7 +40,9 @@ export const signin = async (req: express.Request, res: express.Response) => {
     );
 
     if (userData?.user.uid) {
-      res.status(200).json({ user: userData?.user });
+      res
+        .status(200)
+        .json({ user: userData?.user, role: userHasRegistered[0].role });
     } else {
       res.status(401).json({ message: 'Email or password is wrong' });
     }

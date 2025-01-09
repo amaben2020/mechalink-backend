@@ -53,6 +53,8 @@ export const signin = async (req: express.Request, res: express.Response) => {
         username: userHasRegistered?.username,
         zip: userHasRegistered?.zip,
         country: userHasRegistered?.country,
+        email: userHasRegistered?.email,
+        id: userHasRegistered?.id,
       });
     } else {
       res.status(401).json({ message: 'Email or password is wrong' });

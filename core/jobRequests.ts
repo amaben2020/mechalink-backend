@@ -33,38 +33,6 @@ export const createJobRequest = async (
   }
 };
 
-// TODO: Extract to nearby-mechanics endpoint
-export async function getMechanicsWithinRadius(
-  jobRequestId: number,
-  // in km: 1km is roughly a stadium's size for context 🏟️
-  radius: number = 3
-) {
-  // TODO: Job request late,lng should be same as from the job
-  const [jobRequest = undefined] = await db
-    .select()
-    .from(jobRequestSchema)
-    .where(eq(jobRequestSchema.id, jobRequestId));
-
-  if (!jobRequest) throw new Error('Job request not found');
-
-  const mechanics = await db.select().from(mechanicSchema);
-
-  const job = await getJob(jobRequest.jobId);
-
-  // do not avail mechs without agreement signed
-
-  return mechanics.filter((mechanic: any) => {
-    const distance = calculateDistance(
-      parseFloat(String(job?.latitude!)),
-      parseFloat(String(job?.longitude!)),
-      parseFloat(mechanic.lat),
-      parseFloat(mechanic.lng)
-    );
-
-    return distance <= radius;
-  });
-}
-
 export const updateJobRequestByMechanic = async (
   id: number,
   status: keyof typeof JobRequestStatuses,

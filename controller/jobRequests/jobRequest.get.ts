@@ -1,4 +1,4 @@
-import { getMechanicsWithinRadius } from 'core/jobRequests.ts';
+import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
 import { eq } from 'drizzle-orm';
 import express from 'express';
 import { db } from 'src/db.ts';

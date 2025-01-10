@@ -1,4 +1,11 @@
-import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  doublePrecision,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { UserRoles } from '../../constants/constants.ts';
 
 export const usersTable = pgTable('users', {
@@ -28,4 +35,6 @@ export const usersTable = pgTable('users', {
   country: text('country').default('NG'),
   firebaseId: text('fid').unique(),
   username: text('username').unique(),
+  longitude: doublePrecision('longitude'),
+  latitude: doublePrecision('latitude'),
 });

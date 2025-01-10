@@ -1,8 +1,7 @@
 import { jobsSchema } from 'controller/jobs/job.create.js';
-import { asc, desc, eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
-import { usersTable } from 'src/schema.ts';
 import { jobs } from 'src/schema/job.ts';
 import { jobTimer } from 'src/schema/jobTimer.ts';
 import { z } from 'zod';

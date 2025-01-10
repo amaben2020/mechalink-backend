@@ -1,11 +1,9 @@
 import { z } from 'zod';
 import express from 'express';
-import {
-  createJobRequest,
-  getMechanicsWithinRadius,
-} from 'core/jobRequests.ts';
+import { createJobRequest } from 'core/jobRequests.ts';
 import { firebaseAdmin } from 'config/firebase.ts';
 import { getUserByFId } from 'core/users.ts';
+import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
 
 export const jobRequestSchemaType = z.object({
   created_by: z.string(),

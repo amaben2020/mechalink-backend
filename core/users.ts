@@ -29,3 +29,25 @@ export const getUserByFId = async (id: string) => {
     throw new MechalinkError('Something went wrong', 500);
   }
 };
+
+export const updateUserLocation = async (
+  userId: string,
+  location: {
+    longitude: number;
+    latitude: number;
+  }
+) => {
+  try {
+    const user = await db
+      .update(usersTable)
+      .set({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      })
+      .where(eq(usersTable.firebaseId, String(userId)));
+
+    return user;
+  } catch (error) {
+    throw new MechalinkError('Something went wrong', 500);
+  }
+};

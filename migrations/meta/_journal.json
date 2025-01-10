@@ -71,6 +71,13 @@
       "when": 1735402869299,
       "tag": "0009_salty_grim_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1736512097783,
+      "tag": "0010_married_zaladane",
+      "breakpoints": true
     }
   ]
 }

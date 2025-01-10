@@ -1,5 +1,5 @@
 import { jobsSchema } from 'controller/jobs/job.create.js';
-import { eq } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
 import { jobs } from 'src/schema/job.ts';
@@ -41,7 +41,10 @@ export const createJob = async ({
 
 export const getJobs = async () => {
   try {
-    const jobsData = await db.select().from(jobs);
+    const jobsData = await db
+      .select()
+      .from(jobs)
+      .orderBy(desc(jobs.created_at));
 
     return jobsData;
   } catch (error) {

@@ -2,6 +2,7 @@ import { jobsSchema } from 'controller/jobs/job.create.js';
 import { asc, desc, eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.js';
+import { usersTable } from 'src/schema.ts';
 import { jobs } from 'src/schema/job.ts';
 import { jobTimer } from 'src/schema/jobTimer.ts';
 import { z } from 'zod';
@@ -49,6 +50,20 @@ export const getJobs = async () => {
     return jobsData;
   } catch (error) {
     if (error instanceof Error) throw new MechalinkError('Invalid fields', 500);
+  }
+};
+
+export const getJobsByUserId = async (userId: number) => {
+  try {
+    const jobsData = await db
+      .select()
+      .from(jobs)
+      .where(eq(jobs.userId, userId))
+      .orderBy(desc(jobs.created_at));
+
+    return jobsData;
+  } catch (error) {
+    if (error instanceof Error) throw new MechalinkError('Not found', 404);
   }
 };
 

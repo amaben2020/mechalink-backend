@@ -31,7 +31,7 @@ export const getUserByFId = async (id: string) => {
 };
 
 export const updateUserLocation = async (
-  userId: string,
+  userId: number,
   location: {
     longitude: number;
     latitude: number;
@@ -44,7 +44,8 @@ export const updateUserLocation = async (
         latitude: location.latitude,
         longitude: location.longitude,
       })
-      .where(eq(usersTable.firebaseId, String(userId)));
+      .where(eq(usersTable.id, userId))
+      .returning();
 
     return user;
   } catch (error) {

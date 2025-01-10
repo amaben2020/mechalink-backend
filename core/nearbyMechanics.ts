@@ -8,7 +8,7 @@ import { calculateDistance } from 'utils/calculateDistance.ts';
 export async function getMechanicsWithinRadius(
   jobRequestId: number,
   // in km: 1km is roughly a stadium's size for context 🏟️
-  radius: number = 3
+  radius: number = 2000
 ) {
   // TODO: Job request late,lng should be same as from the job
   const [jobRequest = undefined] = await db
@@ -36,8 +36,18 @@ export async function getMechanicsWithinRadius(
   });
 }
 
-export async function getNearbyMechanics(radius: number = 3) {
+export async function getNearbyMechanics(
+  radius: number = 2000,
+  userId: number
+) {
   const nearbyMechanics = await db.select().from(mechanicSchema);
+  const [user = undefined] = await db
+    .select()
+    .from(usersTable)
+    .where(eq(usersTable.id, userId));
+
+  console.log(nearbyMechanics);
+  console.log('user', user);
 
   if (!nearbyMechanics) throw new Error('Nearby mechanics not found');
 
@@ -45,8 +55,8 @@ export async function getNearbyMechanics(radius: number = 3) {
 
   return nearbyMechanics.filter((mechanic: any) => {
     const distance = calculateDistance(
-      parseFloat(String(usersTable?.latitude!)),
-      parseFloat(String(usersTable?.longitude!)),
+      parseFloat(String(user?.latitude!)),
+      parseFloat(String(user?.longitude!)),
       parseFloat(mechanic.lat),
       parseFloat(mechanic.lng)
     );

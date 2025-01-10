@@ -6,13 +6,18 @@ export const getNearbyMechanicsController = async (
   res: express.Response
 ) => {
   try {
+    console.log('called');
     const radius = req.query.radius;
+    const userId = req.query.userId;
 
-    const nearbyMechs = await getNearbyMechanics(Number(radius));
+    const nearbyMechs = await getNearbyMechanics(
+      Number(radius),
+      Number(userId)
+    );
 
-    console.log(nearbyMechs);
+    console.log('nearbyMechs', nearbyMechs);
 
-    return res.status(201).json({ nearbyMechs });
+    return res.status(200).json({ nearbyMechs });
   } catch (error) {
     console.log(error);
   }

@@ -55,7 +55,6 @@ export async function getNearbyMechanics(
     .from(usersTable)
     .where(eq(usersTable.id, userId));
 
-  console.log('mechanics', mechanics);
   if (!mechanics) throw new Error('Nearby mechanics not found');
 
   // TODO: do not avail mechs without agreement signed

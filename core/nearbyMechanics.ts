@@ -40,20 +40,27 @@ export async function getNearbyMechanics(
   radius: number = 2000,
   userId: number
 ) {
-  const nearbyMechanics = await db.select().from(mechanicSchema);
+  const nearbyMechanics = await db
+    .select()
+    .from(mechanicSchema)
+    .leftJoin(usersTable, eq(mechanicSchema.userId, usersTable.id));
+
+  const mechanics = nearbyMechanics.map((elem) => ({
+    ...elem.mechanics,
+    ...elem.users,
+  }));
+
   const [user = undefined] = await db
     .select()
     .from(usersTable)
     .where(eq(usersTable.id, userId));
 
-  console.log(nearbyMechanics);
-  console.log('user', user);
-
-  if (!nearbyMechanics) throw new Error('Nearby mechanics not found');
+  console.log('mechanics', mechanics);
+  if (!mechanics) throw new Error('Nearby mechanics not found');
 
   // TODO: do not avail mechs without agreement signed
 
-  return nearbyMechanics.filter((mechanic: any) => {
+  return mechanics.filter((mechanic: any) => {
     const distance = calculateDistance(
       parseFloat(String(user?.latitude!)),
       parseFloat(String(user?.longitude!)),

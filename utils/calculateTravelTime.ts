@@ -52,14 +52,14 @@ const travelTime = calculateTravelTime(mechanic, user);
 // console.log(`The mechanic is approximately ${travelTime} minutes away.`);
 
 // google api: TODO: Create one
-async function getTravelTimeFromAPI(mechanic: any, user: any) {
-  const apiKey = 'AIzaSyCRbGybLuOckwXVbjKMf7dqlBoLTbyRp3c';
-  const response = await fetch(
-    `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${mechanic.lat},${mechanic.longitude}&destinations=${user.lat},${user.long}&key=${apiKey}`
-  );
-  const data = await response.json();
-  console.log('Data', data);
-  const travelTime = data.rows[0].elements[0].duration.value / 60; // Time in minutes
-  return Math.ceil(travelTime);
-}
+// async function getTravelTimeFromAPI(mechanic: any, user: any) {
+
+//   const response = await fetch(
+//     `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${mechanic.lat},${mechanic.longitude}&destinations=${user.lat},${user.long}&key=${apiKey}`
+//   );
+//   const data = await response.json();
+//   console.log('Data', data);
+//   const travelTime = data.rows[0].elements[0].duration.value / 60; // Time in minutes
+//   return Math.ceil(travelTime);
+// }
 // console.log('getTravelTimeFromAPI', getTravelTimeFromAPI(mechanic, user));

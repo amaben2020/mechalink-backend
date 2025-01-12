@@ -3,6 +3,7 @@ import { db } from 'src/db.js';
 import { jobRequestSchema, mechanicSchema, usersTable } from 'src/schema.ts';
 import { getJob } from './jobs.ts';
 import { calculateDistance } from 'utils/calculateDistance.ts';
+import { getTravelTimeFromMapboxAPI } from 'utils/calculateTravelTimeWithMapbox.ts';
 
 // TODO: Extract to nearby-mechanics endpoint
 export async function getMechanicsWithinRadius(
@@ -59,7 +60,7 @@ export async function getNearbyMechanics(
 
   // TODO: do not avail mechs without agreement signed
 
-  return mechanics.filter((mechanic: any) => {
+  const result = mechanics.filter((mechanic: any) => {
     const distance = calculateDistance(
       parseFloat(String(user?.latitude!)),
       parseFloat(String(user?.longitude!)),
@@ -69,4 +70,22 @@ export async function getNearbyMechanics(
 
     return distance <= radius;
   });
+
+  const resultWithDistance = await Promise.all(
+    result.map(async (mech) => ({
+      ...mech,
+      distanceAway: await getTravelTimeFromMapboxAPI({
+        user: {
+          latitude: Number(user?.latitude),
+          longitude: Number(user?.longitude),
+        },
+        mechanic: {
+          latitude: Number(mech?.lat),
+          longitude: Number(mech?.lng),
+        },
+      }),
+    }))
+  );
+
+  return resultWithDistance;
 }

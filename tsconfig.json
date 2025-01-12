@@ -22,7 +22,8 @@
     "global.d.ts",
     "routes/job.routes.js",
     "routes/job.routes.js",
-    "routes/job.routes.js"
+    "routes/job.routes.js",
+    "utils/calculateTravelTime.ts"
   ],
   "exclude": ["node_modules"]
 }

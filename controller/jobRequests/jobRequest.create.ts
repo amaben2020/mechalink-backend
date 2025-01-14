@@ -1,9 +1,9 @@
 import { z } from 'zod';
-import express from 'express';
+import { Request, Response } from 'express';
 import { createJobRequest } from 'core/jobRequests.ts';
 import { firebaseAdmin } from 'config/firebase.ts';
 import { getUserByFId } from 'core/users.ts';
-import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
+import { getMechanicById } from 'core/mechanics.ts';
 
 export const jobRequestSchemaType = z.object({
   created_by: z.string(),
@@ -14,8 +14,8 @@ export const jobRequestSchemaType = z.object({
 });
 
 export const jobRequestCreateController = async (
-  req: express.Request,
-  res: express.Response
+  req: Request,
+  res: Response
 ) => {
   try {
     const user = await firebaseAdmin
@@ -27,7 +27,11 @@ export const jobRequestCreateController = async (
     const { created_by, jobId, mechanicId, distance, duration } =
       jobRequestSchemaType.parse(req.body);
 
-    console.log({ created_by, jobId, mechanicId, distance, duration });
+    const mechanic = await getMechanicById(mechanicId);
+
+    if (!mechanic) {
+      throw new Error(`Mechanic with id ${mechanicId} does not exist`);
+    }
 
     const jobRequest = await createJobRequest({
       created_by,
@@ -37,10 +41,6 @@ export const jobRequestCreateController = async (
       distance,
       duration,
     });
-
-    console.log('jobRequest', jobRequest);
-
-    // const nearbyMechanics = await getMechanicsWithinRadius(jobRequest![0].id);
 
     res.status(201).json({ jobRequest });
   } catch (error) {

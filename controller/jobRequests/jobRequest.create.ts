@@ -27,6 +27,8 @@ export const jobRequestCreateController = async (
     const { created_by, jobId, mechanicId, distance, duration } =
       jobRequestSchemaType.parse(req.body);
 
+    console.log({ created_by, jobId, mechanicId, distance, duration });
+
     const jobRequest = await createJobRequest({
       created_by,
       jobId,
@@ -43,6 +45,6 @@ export const jobRequestCreateController = async (
     res.status(201).json({ jobRequest });
   } catch (error) {
     console.log(error);
-    throw new Error('Something went wrong');
+    throw new Error('Something went terribly wrong');
   }
 };

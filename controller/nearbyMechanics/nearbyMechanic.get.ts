@@ -6,7 +6,6 @@ export const getNearbyMechanicsController = async (
   res: express.Response
 ) => {
   try {
-    console.log('called');
     const radius = req.query.radius;
     const userId = req.query.userId;
 

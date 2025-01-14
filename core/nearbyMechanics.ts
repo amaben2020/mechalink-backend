@@ -48,6 +48,7 @@ export async function getNearbyMechanics(
 
   const mechanics = nearbyMechanics.map((elem) => ({
     ...elem.mechanics,
+    mechanicId: elem.mechanics.id,
     ...elem.users,
   }));
 

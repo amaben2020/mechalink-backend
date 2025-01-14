@@ -13,7 +13,10 @@ import { getMechanicById } from './mechanics.ts';
 import { jobs } from 'src/schema/job.ts';
 
 export const createJobRequest = async (
-  data: z.infer<typeof jobRequestSchemaType> & { userId: number }
+  data: z.infer<typeof jobRequestSchemaType> & {
+    userId: number;
+    mechanicId: number;
+  }
 ) => {
   try {
     const result = await db
@@ -21,6 +24,7 @@ export const createJobRequest = async (
       .values({
         jobId: data.jobId,
         userId: data.userId,
+        mechanicId: data.mechanicId,
         created_by: String(data.userId),
         distance: data.distance,
         duration: data.duration,

@@ -26,7 +26,7 @@ export const createMechanic = ({
       })
       .returning();
 
-    return mechanic;
+    return mechanic!;
   } catch (error) {
     console.log(error);
     if (error instanceof Error) throw new MechalinkError(error?.message, 400);

@@ -1,7 +1,11 @@
 export class MechalinkError extends Error {
-  constructor(message: string, code: string | number) {
+  public statusCode: number;
+  public details?: any;
+
+  constructor(message: string, statusCode: number, details?: any) {
     super(message);
-    //@ts-ignore
-    this.code = code;
+    this.statusCode = statusCode;
+    this.details = details;
+    Object.setPrototypeOf(this, MechalinkError.prototype);
   }
 }

@@ -8,6 +8,7 @@ import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
 export const jobRequestSchemaType = z.object({
   created_by: z.string(),
   jobId: z.number(),
+  mechanicId: z.number(),
   distance: z.string(),
   duration: z.string(),
 });
@@ -23,23 +24,22 @@ export const jobRequestCreateController = async (
 
     const [getUser = undefined] = await getUserByFId(user?.uid);
 
-    const { created_by, distance, duration, jobId } =
+    const { created_by, jobId, mechanicId, distance, duration } =
       jobRequestSchemaType.parse(req.body);
 
-    //@ts-ignore
     const jobRequest = await createJobRequest({
       created_by,
-      distance,
-      duration,
       jobId,
       userId: Number(getUser?.id),
+      mechanicId: mechanicId,
+      distance,
+      duration,
     });
 
-    const nearbyMechanics = await getMechanicsWithinRadius(jobRequest![0].id);
+    console.log('jobRequest', jobRequest);
 
-    //  calculate distance of jobRequest
-    console.log(jobRequest);
-    console.log('nearbyMechanics', nearbyMechanics);
+    // const nearbyMechanics = await getMechanicsWithinRadius(jobRequest![0].id);
+
     res.status(201).json({ jobRequest });
   } catch (error) {
     console.log(error);

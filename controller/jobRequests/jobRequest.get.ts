@@ -1,8 +1,8 @@
 import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
-import { eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import express from 'express';
 import { db } from 'src/db.ts';
-import { jobRequestSchema } from 'src/schema.ts';
+import { jobRequestSchema, usersTable } from 'src/schema.ts';
 
 export const jobRequestGetController = async (
   _: express.Request,
@@ -23,12 +23,14 @@ export const jobRequestForMechanicGetController = async (
 ) => {
   try {
     // this would be removed and PUT / assigned manually not upon creation
+
     const { mechanicId } = req.params;
 
     const jobRequest = await db
       .select()
       .from(jobRequestSchema)
-      .where(eq(jobRequestSchema.mechanicId, Number(mechanicId)));
+      .where(eq(jobRequestSchema.mechanicId, Number(mechanicId)))
+      .orderBy(desc(jobRequestSchema.created_at));
 
     const [nearbyMechanics = undefined] = (
       await getMechanicsWithinRadius(jobRequest[0].id)
@@ -39,7 +41,7 @@ export const jobRequestForMechanicGetController = async (
       return;
     }
 
-    res.json(nearbyMechanics);
+    return res.status(200).json(nearbyMechanics);
   } catch (error) {
     console.log(error);
   }

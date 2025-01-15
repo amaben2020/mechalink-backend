@@ -22,26 +22,34 @@ export const jobRequestForMechanicGetController = async (
   res: express.Response
 ) => {
   try {
-    // this would be removed and PUT / assigned manually not upon creation
-
     const { mechanicId } = req.params;
 
     const jobRequest = await db
       .select()
       .from(jobRequestSchema)
       .where(eq(jobRequestSchema.mechanicId, Number(mechanicId)))
-      .orderBy(desc(jobRequestSchema.created_at));
+      .orderBy(desc(jobRequestSchema.created_at))
+      .innerJoin(usersTable, eq(usersTable.id, jobRequestSchema.userId));
 
-    const [nearbyMechanics = undefined] = (
-      await getMechanicsWithinRadius(jobRequest[0].id)
-    ).filter((elem) => elem.id === Number(mechanicId));
+    const formatJobRequest = jobRequest.map((req) => ({
+      id: req.jobRequests.id,
+      status: req.jobRequests.status,
+      userId: req.users.id,
+      address: req.users.addressOne,
+      location: {
+        latitude: req.users.latitude,
+        longitude: req.users.longitude,
+      },
+      userPhone: req.users.phone,
+      country: req.users.country,
+    }));
 
     if (!jobRequest.length) {
       res.json({ message: 'No Job request found for this mechanic' });
       return;
     }
 
-    return res.status(200).json(nearbyMechanics);
+    return res.status(200).json(formatJobRequest.shift());
   } catch (error) {
     console.log(error);
   }

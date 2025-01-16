@@ -22,13 +22,17 @@ export const mechanicsByUserIdGetController = async (
 ) => {
   try {
     const { userId } = req.params;
-    const mechanic = await db
+    const [mechanic = undefined] = await db
       .select()
       .from(mechanicSchema)
       .where(eq(mechanicSchema.userId, Number(userId)))
       .leftJoin(usersTable, eq(usersTable.id, mechanicSchema.id));
 
-    res.json(mechanic);
+    if (mechanic) {
+      res.status(200).json({ mechanicId: mechanic.mechanics.id });
+    } else {
+      res.status(200).json({ message: 'No mechanic found' });
+    }
   } catch (error) {
     console.log(error);
   }

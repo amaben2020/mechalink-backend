@@ -1,9 +1,10 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import router from './routes/index.js';
 import cookieParser from 'cookie-parser';
+import { StacktraceObject } from 'util';
 
 dotenv.config();
 
@@ -43,14 +44,26 @@ app.get('/api/test', (req, res) => {
 });
 
 // 👇 add a global error handler after all the routes.
-app.use((err, req, res, next) => {
-  err.status = err.status || 'fail';
-  err.statusCode = err.statusCode || 500;
+app.use(
+  (
+    err: {
+      status: string;
+      statusCode: number;
+      message: string;
+      stack: StacktraceObject;
+    },
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    err.status = err.status || 'fail';
+    err.statusCode = err.statusCode || 500;
 
-  res.status(err.statusCode).json({
-    status: err.status,
-    // message: transformMessage(err.message),
-    message: err.message + 'Benneth',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
-  });
-});
+    res.status(err.statusCode).json({
+      status: err.status,
+      // message: transformMessage(err.message),
+      message: err.message + 'Benneth',
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+    });
+  }
+);

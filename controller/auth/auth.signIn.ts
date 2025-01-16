@@ -59,11 +59,15 @@ export const signin = tryCatchFn(
         email: userHasRegistered?.email,
         id: userHasRegistered?.id,
       });
+      return; // Ensure no further execution
     } else {
       res.status(401).json({ message: 'Email or password is wrong' });
     }
 
     const validationError = fromError({ message: 'something went wrong' });
-    next(new MechalinkError(validationError.toString(), 500));
+
+    if (validationError) {
+      return next(new MechalinkError(validationError.toString(), 500));
+    }
   }
 );

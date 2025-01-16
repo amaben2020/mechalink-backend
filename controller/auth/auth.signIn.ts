@@ -7,20 +7,16 @@ import { fromError } from 'zod-validation-error';
 import firebaseAuthController from 'services/auth/firebase.js';
 import express, { NextFunction } from 'express';
 import { MechalinkError } from 'errors/mechalink-error.ts';
+import { tryCatchFn } from 'utils/tryCatch.ts';
 
 const signInSchema = z.object({
   password: z.string().min(4),
   email: z.string().email(),
 });
 
-export const signin = async (
-  req: express.Request,
-  res: express.Response,
-  next: NextFunction
-) => {
-  try {
+export const signin = tryCatchFn(
+  async (req: express.Request, res: express.Response, next: NextFunction) => {
     const { email, password } = signInSchema.parse(req.body);
-    console.log(email);
 
     const [userHasRegistered = undefined] = await db
       .select()
@@ -66,8 +62,8 @@ export const signin = async (
     } else {
       res.status(401).json({ message: 'Email or password is wrong' });
     }
-  } catch (error) {
-    const validationError = fromError(error);
+
+    const validationError = fromError({ message: 'something went wrong' });
     next(new MechalinkError(validationError.toString(), 500));
   }
-};
+);

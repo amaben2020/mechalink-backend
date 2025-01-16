@@ -7,5 +7,6 @@ export class MechalinkError extends Error {
     this.statusCode = statusCode;
     this.details = details;
     Object.setPrototypeOf(this, MechalinkError.prototype);
+    Error.captureStackTrace(this, this.constructor);
   }
 }

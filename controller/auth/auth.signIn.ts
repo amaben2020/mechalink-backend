@@ -5,14 +5,19 @@ import { eq } from 'drizzle-orm';
 import { MechalinkAlreadyExists } from '../../errors/index.js';
 import { fromError } from 'zod-validation-error';
 import firebaseAuthController from 'services/auth/firebase.js';
-import express from 'express';
+import express, { NextFunction } from 'express';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 
 const signInSchema = z.object({
   password: z.string().min(4),
   email: z.string().email(),
 });
 
-export const signin = async (req: express.Request, res: express.Response) => {
+export const signin = async (
+  req: express.Request,
+  res: express.Response,
+  next: NextFunction
+) => {
   try {
     const { email, password } = signInSchema.parse(req.body);
     console.log(email);
@@ -25,7 +30,9 @@ export const signin = async (req: express.Request, res: express.Response) => {
 
     if (userHasRegistered?.email !== email) {
       res.status(403).send(`User with ${email} already exists`);
-      throw new MechalinkAlreadyExists(`User with ${email} already exists`);
+      return next(
+        new MechalinkAlreadyExists(`User with ${email} already exists`)
+      );
     }
 
     const userData = await firebaseAuthController.login({ email, password });
@@ -61,7 +68,6 @@ export const signin = async (req: express.Request, res: express.Response) => {
     }
   } catch (error) {
     const validationError = fromError(error);
-
-    res.status(500).send(validationError.toString());
+    next(new MechalinkError(validationError.toString(), 500));
   }
 };

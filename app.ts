@@ -41,3 +41,16 @@ app.get('/api/test', (req, res) => {
     isDev: process.env.NODE_ENV === 'development',
   });
 });
+
+// 👇 add a global error handler after all the routes.
+app.use((err, req, res, next) => {
+  err.status = err.status || 'fail';
+  err.statusCode = err.statusCode || 500;
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    // message: transformMessage(err.message),
+    message: err.message + 'Benneth',
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+  });
+});

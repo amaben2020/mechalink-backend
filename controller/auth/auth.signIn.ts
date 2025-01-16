@@ -25,7 +25,6 @@ export const signin = tryCatchFn(
       .execute();
 
     if (userHasRegistered?.email !== email) {
-      res.status(403).send(`User with ${email} already exists`);
       return next(
         new MechalinkAlreadyExists(`User with ${email} already exists`)
       );
@@ -33,16 +32,16 @@ export const signin = tryCatchFn(
 
     const userData = await firebaseAuthController.login({ email, password });
 
-    res.cookie(
-      'auth-cookie',
-      (await userData?.user.getIdTokenResult())?.token,
-      {
-        maxAge: 900000,
-        httpOnly: true,
-      }
-    );
-
     if (userData?.user.uid) {
+      res.cookie(
+        'auth-cookie',
+        (await userData?.user.getIdTokenResult())?.token,
+        {
+          maxAge: 900000,
+          httpOnly: true,
+        }
+      );
+
       res.status(200).json({
         user: userData?.user,
         role: userHasRegistered?.role,
@@ -61,13 +60,12 @@ export const signin = tryCatchFn(
       });
       return; // Ensure no further execution
     } else {
-      res.status(401).json({ message: 'Email or password is wrong' });
-    }
+      // At this point, a response is guaranteed to be sent
+      const validationError = fromError({ message: 'something went wrong' });
 
-    const validationError = fromError({ message: 'something went wrong' });
-
-    if (validationError) {
-      return next(new MechalinkError(validationError.toString(), 500));
+      if (validationError) {
+        return next(new MechalinkError(validationError.toString(), 500));
+      }
     }
   }
 );

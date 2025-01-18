@@ -34,6 +34,8 @@ export const jobRequestForMechanicGetController = async (
         eq(mechanicSchema.id, jobRequestSchema.mechanicId)
       );
 
+    console.log('jobRequest', jobRequest);
+
     if (!jobRequest.length) {
       res.json({ message: 'No Job request found for this mechanic' });
       return;
@@ -57,8 +59,8 @@ export const jobRequestForMechanicGetController = async (
         // location should be location of the job (user on the job request)
         // TODO: ALWAYS ENSURE JOB AND JOB REQUEST ARE THE USERS
         location: {
-          latitude: jobRequestLocation?.users.longitude,
-          longitude: jobRequestLocation?.users.latitude,
+          latitude: jobRequestLocation?.users.latitude,
+          longitude: jobRequestLocation?.users.longitude,
         },
       }))
       .shift();

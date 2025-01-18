@@ -34,22 +34,38 @@ export const jobRequestForMechanicGetController = async (
         eq(mechanicSchema.id, jobRequestSchema.mechanicId)
       );
 
-    const formatJobRequest = jobRequest.map((req) => ({
-      id: req.jobRequests.id,
-      status: req.jobRequests.status,
-      userId: req.mechanics.id,
-      location: {
-        latitude: req.mechanics.lat,
-        longitude: req.mechanics.lng,
-      },
-    }));
-
     if (!jobRequest.length) {
       res.json({ message: 'No Job request found for this mechanic' });
       return;
     }
 
-    return res.status(200).json(formatJobRequest.shift());
+    const [jobRequestLocation = undefined] = await db
+      .select()
+      .from(jobRequestSchema)
+      .where(
+        eq(jobRequestSchema.userId, Number(jobRequest[0].jobRequests.userId))
+      )
+      .innerJoin(usersTable, eq(usersTable.id, jobRequestSchema.userId));
+
+    console.log('jobRequestLocation', jobRequestLocation);
+
+    const formatJobRequest = jobRequest
+      .map((req) => ({
+        id: req.jobRequests.id,
+        status: req.jobRequests.status,
+        userId: req.mechanics.id,
+        // location should be location of the job (user on the job request)
+        // TODO: ALWAYS ENSURE JOB AND JOB REQUEST ARE THE USERS
+        location: {
+          latitude: jobRequestLocation?.users.longitude,
+          longitude: jobRequestLocation?.users.latitude,
+        },
+      }))
+      .shift();
+
+    console.log('formatJobRequest', formatJobRequest);
+
+    return res.status(200).json(formatJobRequest);
   } catch (error) {
     console.log(error);
   }

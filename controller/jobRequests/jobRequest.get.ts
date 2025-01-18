@@ -2,7 +2,7 @@ import { getMechanicsWithinRadius } from 'core/nearbyMechanics.ts';
 import { desc, eq } from 'drizzle-orm';
 import express from 'express';
 import { db } from 'src/db.ts';
-import { jobRequestSchema, usersTable } from 'src/schema.ts';
+import { jobRequestSchema, mechanicSchema, usersTable } from 'src/schema.ts';
 
 export const jobRequestGetController = async (
   _: express.Request,
@@ -22,26 +22,26 @@ export const jobRequestForMechanicGetController = async (
   res: express.Response
 ) => {
   try {
-    const { userId } = req.params;
+    const { mechanicId } = req.params;
 
     const jobRequest = await db
       .select()
       .from(jobRequestSchema)
-      .where(eq(jobRequestSchema.userId, Number(userId)))
+      .where(eq(jobRequestSchema.mechanicId, Number(mechanicId)))
       .orderBy(desc(jobRequestSchema.created_at))
-      .innerJoin(usersTable, eq(usersTable.id, jobRequestSchema.userId));
+      .innerJoin(
+        mechanicSchema,
+        eq(mechanicSchema.id, jobRequestSchema.mechanicId)
+      );
 
     const formatJobRequest = jobRequest.map((req) => ({
       id: req.jobRequests.id,
       status: req.jobRequests.status,
-      userId: req.users.id,
-      address: req.users.addressOne,
+      userId: req.mechanics.id,
       location: {
-        latitude: req.users.latitude,
-        longitude: req.users.longitude,
+        latitude: req.mechanics.lat,
+        longitude: req.mechanics.lng,
       },
-      userPhone: req.users.phone,
-      country: req.users.country,
     }));
 
     if (!jobRequest.length) {

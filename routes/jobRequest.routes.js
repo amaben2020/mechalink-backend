@@ -5,7 +5,10 @@ import {
   jobRequestCreateController,
   jobRequestGetController,
 } from 'controller/jobRequests/index.ts';
-import { jobRequestForMechanicGetController } from 'controller/jobRequests/jobRequest.get.ts';
+import {
+  jobRequestForMechanicGetController,
+  jobRequestForUserGetController,
+} from 'controller/jobRequests/jobRequest.get.ts';
 import {
   jobRequestUpdateController,
   jobRequestSelectMechanicController,
@@ -21,6 +24,8 @@ router.route('/mechanic').get(trimRequest.all, jobRequestGetController);
 router
   .route('/:mechanicId')
   .get(trimRequest.all, jobRequestForMechanicGetController);
+
+router.route('/user/:userId').get(jobRequestForUserGetController);
 
 router.route('/user').put(trimRequest.all, jobRequestSelectMechanicController);
 router.route('/mechanic').put(trimRequest.all, jobRequestUpdateController);

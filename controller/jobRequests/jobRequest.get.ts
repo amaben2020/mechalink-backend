@@ -86,6 +86,7 @@ export const jobRequestForUserGetController = async (
         },
         userPhone: req.users.phone,
         country: req.users.country,
+        mechanicId: req.jobRequests.mechanicId,
       }))
       .shift();
 

@@ -26,10 +26,20 @@ export const mechanicsByUserIdGetController = async (
       .select()
       .from(mechanicSchema)
       .where(eq(mechanicSchema.userId, Number(userId)))
-      .leftJoin(usersTable, eq(usersTable.id, mechanicSchema.id));
+      .leftJoin(usersTable, eq(usersTable.id, mechanicSchema.userId));
+
+    console.log('mechanic', mechanic);
 
     if (mechanic) {
-      res.status(200).json({ mechanicId: mechanic.mechanics.id });
+      res.status(200).json({
+        arrivalRate: mechanic.mechanics.arrivalRate,
+        fullName: mechanic.users?.firstName + ' ' + mechanic.users?.lastName,
+        email: mechanic.users?.email,
+        mechanicId: mechanic.mechanics.id,
+        country: mechanic.users?.country,
+        city: mechanic.users?.city,
+        userId: mechanic.users?.id,
+      });
     } else {
       res.status(200).json({ message: 'No mechanic found' });
     }

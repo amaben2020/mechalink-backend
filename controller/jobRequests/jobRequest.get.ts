@@ -49,8 +49,6 @@ export const jobRequestForMechanicGetController = async (
       )
       .innerJoin(usersTable, eq(usersTable.id, jobRequestSchema.userId));
 
-    console.log('jobRequestLocation', jobRequestLocation);
-
     const formatJobRequest = jobRequest
       .map((req) => ({
         id: req.jobRequests.id,

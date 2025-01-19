@@ -11,17 +11,18 @@ import { MechalinkError } from 'errors/mechalink-error.ts';
 // by mech
 export const completeJob = tryCatchFn(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { mechanicId } = req.params;
+    const { mechanicId, jobId } = req.params;
 
     const mechanic = await getMechanicById(+mechanicId);
+    console.log(mechanic);
 
     const job = await db
       .select()
       .from(jobs)
       .where(
         and(
-          eq(jobs.id, Number(mechanic.jobId)),
-          eq(jobs.status, JobStatuses.IN_PROGRESS),
+          eq(jobs.id, Number(jobId)),
+          // eq(jobs.status, JobStatuses.IN_PROGRESS),
           eq(jobs.isApproved, true),
           eq(jobs.mechanicId, +mechanicId)
         )
@@ -31,21 +32,21 @@ export const completeJob = tryCatchFn(
       return next(new MechalinkError('Job Not found', 404));
     }
 
-    const response = await db
+    const [response = undefined] = await db
       .update(jobs)
       .set({
         status: JobStatuses.COMPLETED,
       })
       .where(
         and(
-          eq(jobs.id, Number(mechanic.jobId)),
-          eq(jobs.status, JobStatuses.IN_PROGRESS),
+          eq(jobs.id, Number(jobId)),
+          // eq(jobs.status, JobStatuses.IN_PROGRESS),
           eq(jobs.isApproved, true)
         )
       )
       .returning();
 
-    if (response.length === 0) {
+    if (!response) {
       return next(new MechalinkError('Job Not found', 404));
     }
 

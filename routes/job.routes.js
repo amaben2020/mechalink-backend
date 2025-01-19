@@ -11,7 +11,7 @@ const router = express.Router();
 
 router.route('/jobs').post(trimRequest.all, authenticatedRoute, create);
 router.route('/:jobId').put(approveJob);
-router.route('/:jobId/:mechanicId').put(completeJob);
+router.route('/mechanics/:jobId/:mechanicId').put(completeJob);
 
 // public routes
 router.route('').get(getAll);

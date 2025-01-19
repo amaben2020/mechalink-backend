@@ -1,7 +1,7 @@
-import { NextFn } from '@firebase/auth';
 import { JobStatuses } from 'constants/constants.ts';
 import { and, eq } from 'drizzle-orm';
 import { MechalinkRequired } from 'errors/400/required-error.ts';
+import { MechalinkError } from 'errors/mechalink-error.ts';
 import { NextFunction, Request, Response } from 'express';
 import { db } from 'src/db.ts';
 import { jobs } from 'src/schema/job.ts';
@@ -25,7 +25,7 @@ export const approveJob = tryCatchFn(
       );
 
     if (!job) {
-      next(new MechalinkRequired());
+      return next(new MechalinkError('Something went wrong', 500));
     }
 
     // approve by user
@@ -43,8 +43,6 @@ export const approveJob = tryCatchFn(
         )
       )
       .returning();
-
-    console.log(response);
 
     res.status(201).json(response);
   }

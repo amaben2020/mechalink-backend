@@ -2,7 +2,8 @@ import { mechanicSchemaType } from 'controller/mechanics/mechanic.create.ts';
 import { eq } from 'drizzle-orm';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.ts';
-import { mechanicSchema } from 'src/schema.ts';
+import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
+import { jobs } from 'src/schema/job.ts';
 import { mechanics } from 'src/schema/mechanic.ts';
 import { z } from 'zod';
 
@@ -38,19 +39,15 @@ export const getMechanicById = async (mechanicId: number) => {
     const [mechanic = undefined] = await db
       .select()
       .from(mechanicSchema)
-      .where(eq(mechanicSchema.id, mechanicId));
+      .where(eq(mechanicSchema.id, mechanicId))
+      .innerJoin(jobs, eq(jobs.mechanicId, mechanicId))
+      .innerJoin(jobRequestSchema, eq(jobRequestSchema.mechanicId, mechanicId));
 
-    // ensure the error is returned in the controller ✌🏾
-    // if (!mechanic) throw new MechalinkError('Not found', 404);
-
-    // if (mechanic?.id && !mechanic?.hasAcceptedTerms) {
-    //   throw new MechalinkError(
-    //     'Mechanic must accept the Terms and Conditions to receive jobs.',
-    //     403
-    //   );
-    // }
-
-    return mechanic;
+    return {
+      ...mechanic?.mechanics,
+      jobId: mechanic?.jobs.id,
+      jobRequestId: mechanic?.jobRequests.id,
+    };
   } catch (error) {
     console.log(error);
     throw new MechalinkError('Mechanic not found', 404);

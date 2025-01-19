@@ -3,12 +3,7 @@ import { app } from './app.js';
 let server;
 
 server = app.listen(process.env.PORT, () => {
-  console.log(
-    process.env.NODE_ENV == 'development'
-      ? process.env.DATABASE_URL_DEV
-      : process.env.DATABASE_URL_PROD
-  );
-  console.log('Running now...');
+  console.log('Server Healthy...🍀🍀🍀🍀');
 });
 
 const exitHandler = () => {

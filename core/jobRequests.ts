@@ -148,6 +148,7 @@ export const updateJobRequestByMechanic = async (
         .update(jobs)
         .set({
           status: JobStatuses.IN_PROGRESS,
+          mechanicId: mechanicId,
         })
         .where(eq(jobs.id, Number(job?.id)));
 

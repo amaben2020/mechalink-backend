@@ -6,7 +6,7 @@ import { z } from 'zod';
 const jobIdSchema = z.string();
 
 export const get = async (req: express.Request, res: express.Response) => {
-  const jobId = jobIdSchema.parse(req.query.jobId);
+  const jobId = jobIdSchema.parse(req.params.jobId);
   try {
     const job = await getJob(Number(jobId));
 

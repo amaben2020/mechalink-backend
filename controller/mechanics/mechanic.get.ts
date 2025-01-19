@@ -28,8 +28,6 @@ export const mechanicsByUserIdGetController = async (
       .where(eq(mechanicSchema.userId, Number(userId)))
       .leftJoin(usersTable, eq(usersTable.id, mechanicSchema.userId));
 
-    console.log('mechanic', mechanic);
-
     if (mechanic) {
       res.status(200).json({
         arrivalRate: mechanic.mechanics.arrivalRate,

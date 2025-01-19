@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { MechalinkRequired } from 'errors/400/required-error.ts';
 import { MechalinkError } from 'errors/mechalink-error.ts';
 import { db } from 'src/db.ts';
-import { jobRequestSchema, mechanicSchema } from 'src/schema.ts';
+import { jobRequestSchema } from 'src/schema.ts';
 import { calculateDistance } from 'utils/calculateDistance.ts';
 import { Timer } from 'utils/timer.ts';
 import { z } from 'zod';
@@ -213,12 +213,10 @@ export const updateJobRequestByUser = async (
     if (status === JobRequestStatuses.NOTIFYING) {
       const mech = await getMechanicById(mechanicId);
 
-      console.log('MECH', mech);
-      if (!mech?.hasAcceptedTerms) {
+      if (!mech?.hasAcceptedTerms)
         throw new Error(
           'Mechanic must accept the Terms and Conditions to receive jobs.'
         );
-      }
 
       const job = await getJob(jobRequest.jobId);
 

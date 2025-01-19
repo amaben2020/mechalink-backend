@@ -11,6 +11,7 @@ import { tryCatchFn } from 'utils/tryCatch.ts';
 export const approveJob = tryCatchFn(
   async (req: Request, res: Response, next: NextFunction) => {
     const { jobId } = req.params;
+    console.log('called');
 
     // check if job status is in progress
 
@@ -19,10 +20,12 @@ export const approveJob = tryCatchFn(
       .from(jobs)
       .where(
         and(
-          eq(jobs.id, Number(jobId)),
-          eq(jobs.status, JobStatuses.IN_PROGRESS)
+          eq(jobs.id, Number(jobId))
+          // eq(jobs.status, JobStatuses.IN_PROGRESS)
         )
       );
+
+    console.log(job);
 
     if (!job) {
       return next(new MechalinkError('Something went wrong', 500));
@@ -38,8 +41,8 @@ export const approveJob = tryCatchFn(
       })
       .where(
         and(
-          eq(jobs.id, Number(jobId)),
-          eq(jobs.status, JobStatuses.IN_PROGRESS)
+          eq(jobs.id, Number(jobId))
+          // eq(jobs.status, JobStatuses.IN_PROGRESS)
         )
       )
       .returning();

@@ -144,6 +144,8 @@ export const updateJobRequestByMechanic = async (
         })
         .returning();
 
+      console.log('jobId ====>', job?.id);
+
       await db
         .update(jobs)
         .set({

@@ -33,7 +33,6 @@ export const createMechanic = ({
     if (error instanceof Error) throw new MechalinkError(error?.message, 400);
   }
 };
-
 export const getMechanicById = async (mechanicId: number) => {
   try {
     const [mechanic = undefined] = await db
